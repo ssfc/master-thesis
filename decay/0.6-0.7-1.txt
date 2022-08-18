@@ -1,0 +1,2202 @@
+opt = Namespace(T=2, alpha=0.1, batch_size=128, beta=1e-05, cuda=1, dataset='cifar100', decay_fea=1, decay_kd=0.7, decay_loss=0.6, distill='kd', epochs=240, log_name='0.6-0.7-1.txt', lr=0.1, model='multi_resnet50_kd', model_name='multi_resnet50_kd_cifar100_selfkd_origin', model_path='../save/models', momentum=0.9, num_workers=8, print_freq=100, save_folder='../save/models/multi_resnet50_kd_cifar100_selfkd_origin', save_freq=40, seed=2, tb_folder='../save/tensorboard/multi_resnet50_kd_cifar100_selfkd_origin', tb_freq=500, tb_path='../save/tensorboard', weight_decay=0.0001)
+----------- Network Initialization --------------
+model = Multi_ResNet(
+  (conv1): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (layer1): Sequential(
+    (0): BottleneckBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BottleneckBlock(
+      (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (2): BottleneckBlock(
+      (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer2): Sequential(
+    (0): BottleneckBlock(
+      (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BottleneckBlock(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (2): BottleneckBlock(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (3): BottleneckBlock(
+      (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer3): Sequential(
+    (0): BottleneckBlock(
+      (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BottleneckBlock(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (2): BottleneckBlock(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (3): BottleneckBlock(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (4): BottleneckBlock(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (5): BottleneckBlock(
+      (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer4): Sequential(
+    (0): BottleneckBlock(
+      (conv1): Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BottleneckBlock(
+      (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (2): BottleneckBlock(
+      (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (bn3): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (downsample1_1): Sequential(
+    (0): Conv2d(256, 2048, kernel_size=(1, 1), stride=(8, 8), bias=False)
+    (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (bottleneck1_1): Sequential(
+    (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Conv2d(512, 512, kernel_size=(8, 8), stride=(8, 8))
+    (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU()
+    (6): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+    (7): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+  )
+  (avgpool1): AdaptiveAvgPool2d(output_size=(1, 1))
+  (middle_fc1): Linear(in_features=2048, out_features=100, bias=True)
+  (downsample2_1): Sequential(
+    (0): Conv2d(512, 2048, kernel_size=(1, 1), stride=(4, 4), bias=False)
+    (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (bottleneck2_1): Sequential(
+    (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Conv2d(512, 512, kernel_size=(4, 4), stride=(4, 4))
+    (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU()
+    (6): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+    (7): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+  )
+  (avgpool2): AdaptiveAvgPool2d(output_size=(1, 1))
+  (middle_fc2): Linear(in_features=2048, out_features=100, bias=True)
+  (downsample3_1): Sequential(
+    (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
+    (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (bottleneck3_1): Sequential(
+    (0): Conv2d(1024, 512, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU()
+    (3): Conv2d(512, 512, kernel_size=(2, 2), stride=(2, 2))
+    (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU()
+    (6): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+    (7): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU()
+  )
+  (avgpool3): AdaptiveAvgPool2d(output_size=(1, 1))
+  (middle_fc3): Linear(in_features=2048, out_features=100, bias=True)
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): Linear(in_features=2048, out_features=100, bias=True)
+)
+param size = 54.113232MB
+-----------------------------------------------
+ Save initial parameters
+Epoch: 1  lr: 0.100
+Epoch: [1][000/391]	Time 2.5853 Data 0.9861 Loss 4.8249 (4.8249)	Acc@1 0.000 (0.000)	Acc@5 3.125 (3.125)
+Epoch: [1][100/391]	Time 0.1878 Data 0.0020 Loss 4.5954 (5.5585)	Acc@1 4.688 (1.153)	Acc@5 9.375 (5.593)
+Epoch: [1][200/391]	Time 0.1898 Data 0.0023 Loss 4.5587 (5.0845)	Acc@1 5.469 (1.578)	Acc@5 9.375 (6.821)
+Epoch: [1][300/391]	Time 0.1858 Data 0.0019 Loss 4.4785 (4.9146)	Acc@1 1.562 (1.887)	Acc@5 8.594 (8.165)
+Testing the models......
+Loss: 4.4610, Prec@1: 2.66, Prec@5: 12.17
+Epoch time: 83s
+Saving models
+Epoch: 2  lr: 0.100
+Epoch: [2][000/391]	Time 1.1827 Data 0.9376 Loss 4.4721 (4.4721)	Acc@1 2.344 (2.344)	Acc@5 10.938 (10.938)
+Epoch: [2][100/391]	Time 0.1861 Data 0.0019 Loss 4.2690 (4.4907)	Acc@1 5.469 (3.102)	Acc@5 21.875 (13.807)
+Epoch: [2][200/391]	Time 0.1859 Data 0.0019 Loss 4.3562 (4.4989)	Acc@1 4.688 (3.249)	Acc@5 17.188 (14.401)
+Epoch: [2][300/391]	Time 0.1868 Data 0.0021 Loss 4.3830 (4.4826)	Acc@1 3.906 (3.317)	Acc@5 21.094 (15.025)
+Testing the models......
+Loss: 4.5756, Prec@1: 4.28, Prec@5: 19.08
+Epoch time: 80s
+Saving models
+Epoch: 3  lr: 0.100
+Epoch: [3][000/391]	Time 1.1155 Data 0.9236 Loss 4.2557 (4.2557)	Acc@1 4.688 (4.688)	Acc@5 17.969 (17.969)
+Epoch: [3][100/391]	Time 0.1867 Data 0.0022 Loss 4.3073 (4.3394)	Acc@1 6.250 (4.664)	Acc@5 17.969 (20.003)
+Epoch: [3][200/391]	Time 0.1857 Data 0.0019 Loss 4.3318 (4.3144)	Acc@1 5.469 (4.948)	Acc@5 21.094 (20.845)
+Epoch: [3][300/391]	Time 0.1878 Data 0.0021 Loss 6.3487 (4.3019)	Acc@1 7.812 (5.342)	Acc@5 25.781 (21.717)
+Testing the models......
+Loss: 4.2414, Prec@1: 7.73, Prec@5: 27.22
+Epoch time: 80s
+Saving models
+Epoch: 4  lr: 0.100
+Epoch: [4][000/391]	Time 1.1164 Data 0.9202 Loss 4.0016 (4.0016)	Acc@1 8.594 (8.594)	Acc@5 25.781 (25.781)
+Epoch: [4][100/391]	Time 0.1866 Data 0.0021 Loss 4.0641 (4.1244)	Acc@1 8.594 (7.851)	Acc@5 25.000 (26.655)
+Epoch: [4][200/391]	Time 0.1860 Data 0.0020 Loss 3.9901 (4.1181)	Acc@1 14.844 (8.298)	Acc@5 35.938 (27.729)
+Epoch: [4][300/391]	Time 0.1904 Data 0.0019 Loss 3.8000 (4.1000)	Acc@1 11.719 (8.568)	Acc@5 30.469 (28.504)
+Testing the models......
+Loss: 3.9213, Prec@1: 11.12, Prec@5: 34.84
+Epoch time: 80s
+Saving models
+Epoch: 5  lr: 0.100
+Epoch: [5][000/391]	Time 1.1268 Data 0.8998 Loss 4.1999 (4.1999)	Acc@1 8.594 (8.594)	Acc@5 28.906 (28.906)
+Epoch: [5][100/391]	Time 0.1857 Data 0.0020 Loss 4.0501 (3.9341)	Acc@1 14.062 (11.069)	Acc@5 35.156 (34.104)
+Epoch: [5][200/391]	Time 0.1855 Data 0.0019 Loss 3.6532 (3.9117)	Acc@1 14.062 (11.719)	Acc@5 38.281 (34.896)
+Epoch: [5][300/391]	Time 0.1858 Data 0.0023 Loss 3.5540 (3.8886)	Acc@1 14.062 (11.965)	Acc@5 39.844 (35.694)
+Testing the models......
+Loss: 3.8346, Prec@1: 15.19, Prec@5: 39.93
+Epoch time: 80s
+Saving models
+Epoch: 6  lr: 0.100
+Epoch: [6][000/391]	Time 1.1475 Data 0.9351 Loss 3.8191 (3.8191)	Acc@1 14.844 (14.844)	Acc@5 35.156 (35.156)
+Epoch: [6][100/391]	Time 0.1861 Data 0.0021 Loss 3.3999 (3.6992)	Acc@1 17.188 (14.712)	Acc@5 46.875 (40.888)
+Epoch: [6][200/391]	Time 0.1865 Data 0.0019 Loss 3.5194 (3.7002)	Acc@1 20.312 (15.159)	Acc@5 48.438 (41.344)
+Epoch: [6][300/391]	Time 0.1859 Data 0.0023 Loss 3.2226 (3.6600)	Acc@1 18.750 (15.913)	Acc@5 46.094 (42.367)
+Testing the models......
+Loss: 3.6738, Prec@1: 19.69, Prec@5: 46.93
+Epoch time: 80s
+Saving models
+Epoch: 7  lr: 0.100
+Epoch: [7][000/391]	Time 1.1664 Data 0.9264 Loss 3.3220 (3.3220)	Acc@1 25.781 (25.781)	Acc@5 49.219 (49.219)
+Epoch: [7][100/391]	Time 0.1863 Data 0.0019 Loss 3.4719 (3.4763)	Acc@1 17.188 (18.665)	Acc@5 53.125 (46.287)
+Epoch: [7][200/391]	Time 0.1860 Data 0.0019 Loss 3.7070 (3.4528)	Acc@1 17.188 (19.174)	Acc@5 45.312 (47.174)
+Epoch: [7][300/391]	Time 0.1864 Data 0.0021 Loss 3.2141 (3.4236)	Acc@1 26.562 (19.757)	Acc@5 51.562 (47.937)
+Testing the models......
+Loss: 3.2675, Prec@1: 23.98, Prec@5: 52.83
+Epoch time: 80s
+Saving models
+Epoch: 8  lr: 0.100
+Epoch: [8][000/391]	Time 1.1140 Data 0.8798 Loss 3.4680 (3.4680)	Acc@1 16.406 (16.406)	Acc@5 53.125 (53.125)
+Epoch: [8][100/391]	Time 0.1861 Data 0.0019 Loss 3.2374 (3.2524)	Acc@1 23.438 (22.695)	Acc@5 49.219 (52.622)
+Epoch: [8][200/391]	Time 0.1865 Data 0.0020 Loss 3.0368 (3.2326)	Acc@1 25.000 (23.123)	Acc@5 55.469 (52.853)
+Epoch: [8][300/391]	Time 0.1884 Data 0.0020 Loss 3.0259 (3.2117)	Acc@1 19.531 (23.401)	Acc@5 53.906 (53.301)
+Testing the models......
+Loss: 3.0550, Prec@1: 27.53, Prec@5: 57.69
+Epoch time: 80s
+Saving models
+Epoch: 9  lr: 0.100
+Epoch: [9][000/391]	Time 1.1031 Data 0.9145 Loss 2.8638 (2.8638)	Acc@1 27.344 (27.344)	Acc@5 58.594 (58.594)
+Epoch: [9][100/391]	Time 0.1868 Data 0.0022 Loss 2.7219 (3.0255)	Acc@1 36.719 (27.282)	Acc@5 64.844 (57.611)
+Epoch: [9][200/391]	Time 0.1873 Data 0.0019 Loss 2.8799 (3.0075)	Acc@1 32.031 (27.491)	Acc@5 61.719 (57.914)
+Epoch: [9][300/391]	Time 0.1864 Data 0.0019 Loss 2.6977 (2.9824)	Acc@1 36.719 (27.930)	Acc@5 64.844 (58.337)
+Testing the models......
+Loss: 2.8663, Prec@1: 31.70, Prec@5: 62.35
+Epoch time: 80s
+Saving models
+Epoch: 10  lr: 0.100
+Epoch: [10][000/391]	Time 1.2338 Data 1.0027 Loss 2.8787 (2.8787)	Acc@1 29.688 (29.688)	Acc@5 60.938 (60.938)
+Epoch: [10][100/391]	Time 0.1880 Data 0.0020 Loss 2.4946 (2.7812)	Acc@1 39.062 (31.761)	Acc@5 65.625 (62.554)
+Epoch: [10][200/391]	Time 0.1864 Data 0.0019 Loss 2.8435 (2.7710)	Acc@1 25.781 (31.919)	Acc@5 63.281 (62.924)
+Epoch: [10][300/391]	Time 0.1884 Data 0.0021 Loss 2.8143 (2.7520)	Acc@1 33.594 (32.143)	Acc@5 56.250 (63.385)
+Testing the models......
+Loss: 2.8197, Prec@1: 32.19, Prec@5: 64.26
+Epoch time: 80s
+Saving models
+Epoch: 11  lr: 0.100
+Epoch: [11][000/391]	Time 1.1765 Data 0.9661 Loss 2.3159 (2.3159)	Acc@1 39.844 (39.844)	Acc@5 71.875 (71.875)
+Epoch: [11][100/391]	Time 0.1862 Data 0.0019 Loss 2.7733 (2.5722)	Acc@1 35.156 (35.450)	Acc@5 62.500 (67.551)
+Epoch: [11][200/391]	Time 0.1866 Data 0.0018 Loss 2.3432 (2.5638)	Acc@1 40.625 (35.491)	Acc@5 67.188 (67.763)
+Epoch: [11][300/391]	Time 0.1859 Data 0.0019 Loss 2.8214 (2.5636)	Acc@1 38.281 (35.501)	Acc@5 64.062 (67.668)
+Testing the models......
+Loss: 2.5464, Prec@1: 36.30, Prec@5: 68.19
+Epoch time: 80s
+Saving models
+Epoch: 12  lr: 0.100
+Epoch: [12][000/391]	Time 1.1080 Data 0.9154 Loss 2.3898 (2.3898)	Acc@1 34.375 (34.375)	Acc@5 67.188 (67.188)
+Epoch: [12][100/391]	Time 0.1860 Data 0.0019 Loss 2.4938 (2.3926)	Acc@1 32.812 (38.707)	Acc@5 71.094 (70.985)
+Epoch: [12][200/391]	Time 0.1862 Data 0.0019 Loss 2.1073 (2.3960)	Acc@1 46.094 (38.993)	Acc@5 74.219 (71.102)
+Epoch: [12][300/391]	Time 0.1871 Data 0.0023 Loss 2.3338 (2.3813)	Acc@1 37.500 (39.377)	Acc@5 67.188 (71.426)
+Testing the models......
+Loss: 2.6014, Prec@1: 38.16, Prec@5: 70.64
+Epoch time: 80s
+Saving models
+Epoch: 13  lr: 0.100
+Epoch: [13][000/391]	Time 1.1193 Data 0.9550 Loss 2.3166 (2.3166)	Acc@1 46.094 (46.094)	Acc@5 72.656 (72.656)
+Epoch: [13][100/391]	Time 0.1867 Data 0.0025 Loss 2.4548 (2.2323)	Acc@1 36.719 (41.816)	Acc@5 69.531 (74.343)
+Epoch: [13][200/391]	Time 0.1862 Data 0.0020 Loss 1.8713 (2.2268)	Acc@1 46.094 (41.962)	Acc@5 84.375 (74.475)
+Epoch: [13][300/391]	Time 0.1876 Data 0.0020 Loss 2.4711 (2.2253)	Acc@1 40.625 (42.234)	Acc@5 69.531 (74.517)
+Testing the models......
+Loss: 2.3402, Prec@1: 40.04, Prec@5: 72.21
+Epoch time: 80s
+Saving models
+Epoch: 14  lr: 0.100
+Epoch: [14][000/391]	Time 1.1163 Data 0.9411 Loss 1.9611 (1.9611)	Acc@1 45.312 (45.312)	Acc@5 75.781 (75.781)
+Epoch: [14][100/391]	Time 0.1855 Data 0.0020 Loss 2.0237 (2.0747)	Acc@1 43.750 (45.529)	Acc@5 80.469 (77.274)
+Epoch: [14][200/391]	Time 0.1881 Data 0.0019 Loss 1.9853 (2.0856)	Acc@1 51.562 (45.647)	Acc@5 82.031 (77.192)
+Epoch: [14][300/391]	Time 0.1849 Data 0.0019 Loss 1.9780 (2.0804)	Acc@1 46.094 (45.367)	Acc@5 81.250 (77.167)
+Testing the models......
+Loss: 2.2249, Prec@1: 44.57, Prec@5: 75.94
+Epoch time: 80s
+Saving models
+Epoch: 15  lr: 0.100
+Epoch: [15][000/391]	Time 1.1743 Data 0.9278 Loss 1.7899 (1.7899)	Acc@1 52.344 (52.344)	Acc@5 78.125 (78.125)
+Epoch: [15][100/391]	Time 0.1855 Data 0.0020 Loss 1.7863 (1.9369)	Acc@1 47.656 (48.546)	Acc@5 83.594 (79.927)
+Epoch: [15][200/391]	Time 0.1875 Data 0.0021 Loss 1.9005 (1.9475)	Acc@1 46.094 (48.162)	Acc@5 75.781 (79.699)
+Epoch: [15][300/391]	Time 0.1862 Data 0.0020 Loss 2.1759 (1.9496)	Acc@1 46.094 (48.087)	Acc@5 74.219 (79.612)
+Testing the models......
+Loss: 2.1044, Prec@1: 45.85, Prec@5: 77.20
+Epoch time: 80s
+Saving models
+Epoch: 16  lr: 0.100
+Epoch: [16][000/391]	Time 1.1258 Data 0.8598 Loss 1.7755 (1.7755)	Acc@1 54.688 (54.688)	Acc@5 81.250 (81.250)
+Epoch: [16][100/391]	Time 0.1871 Data 0.0020 Loss 1.8567 (1.8291)	Acc@1 51.562 (50.619)	Acc@5 78.906 (81.528)
+Epoch: [16][200/391]	Time 0.1853 Data 0.0018 Loss 1.6879 (1.8305)	Acc@1 57.812 (50.731)	Acc@5 83.594 (81.363)
+Epoch: [16][300/391]	Time 0.1854 Data 0.0019 Loss 1.8046 (1.8324)	Acc@1 50.000 (50.797)	Acc@5 81.250 (81.260)
+Testing the models......
+Loss: 1.9700, Prec@1: 49.12, Prec@5: 79.31
+Epoch time: 80s
+Saving models
+Epoch: 17  lr: 0.100
+Epoch: [17][000/391]	Time 1.1711 Data 0.9680 Loss 1.6763 (1.6763)	Acc@1 50.000 (50.000)	Acc@5 81.250 (81.250)
+Epoch: [17][100/391]	Time 0.1874 Data 0.0019 Loss 1.7210 (1.7326)	Acc@1 53.125 (53.063)	Acc@5 83.594 (82.805)
+Epoch: [17][200/391]	Time 0.1860 Data 0.0019 Loss 1.7793 (1.7405)	Acc@1 46.875 (52.900)	Acc@5 80.469 (82.797)
+Epoch: [17][300/391]	Time 0.1858 Data 0.0020 Loss 1.7040 (1.7489)	Acc@1 52.344 (52.551)	Acc@5 82.812 (82.594)
+Testing the models......
+Loss: 1.9431, Prec@1: 49.21, Prec@5: 79.26
+Epoch time: 80s
+Saving models
+Epoch: 18  lr: 0.100
+Epoch: [18][000/391]	Time 1.2242 Data 1.0538 Loss 1.5168 (1.5168)	Acc@1 53.906 (53.906)	Acc@5 84.375 (84.375)
+Epoch: [18][100/391]	Time 0.1884 Data 0.0021 Loss 1.6334 (1.6300)	Acc@1 54.688 (55.059)	Acc@5 83.594 (84.754)
+Epoch: [18][200/391]	Time 0.1848 Data 0.0019 Loss 1.9607 (1.6384)	Acc@1 52.344 (55.115)	Acc@5 81.250 (84.643)
+Epoch: [18][300/391]	Time 0.1891 Data 0.0020 Loss 1.9349 (1.6422)	Acc@1 50.000 (55.095)	Acc@5 85.156 (84.596)
+Testing the models......
+Loss: 1.9004, Prec@1: 50.24, Prec@5: 80.23
+Epoch time: 80s
+Saving models
+Epoch: 19  lr: 0.100
+Epoch: [19][000/391]	Time 1.1924 Data 1.0045 Loss 1.6012 (1.6012)	Acc@1 57.812 (57.812)	Acc@5 85.938 (85.938)
+Epoch: [19][100/391]	Time 0.1850 Data 0.0019 Loss 1.4910 (1.5375)	Acc@1 54.688 (57.209)	Acc@5 85.938 (85.999)
+Epoch: [19][200/391]	Time 0.1882 Data 0.0019 Loss 1.6455 (1.5573)	Acc@1 54.688 (56.887)	Acc@5 84.375 (85.860)
+Epoch: [19][300/391]	Time 0.1854 Data 0.0018 Loss 1.5712 (1.5684)	Acc@1 54.688 (56.894)	Acc@5 84.375 (85.756)
+Testing the models......
+Loss: 1.9462, Prec@1: 50.48, Prec@5: 80.82
+Epoch time: 80s
+Saving models
+Epoch: 20  lr: 0.100
+Epoch: [20][000/391]	Time 1.1208 Data 0.9211 Loss 1.5052 (1.5052)	Acc@1 50.781 (50.781)	Acc@5 91.406 (91.406)
+Epoch: [20][100/391]	Time 0.1850 Data 0.0019 Loss 1.3006 (1.4654)	Acc@1 64.844 (59.313)	Acc@5 89.844 (87.647)
+Epoch: [20][200/391]	Time 0.1858 Data 0.0019 Loss 1.7529 (1.4533)	Acc@1 53.906 (59.453)	Acc@5 82.812 (87.527)
+Epoch: [20][300/391]	Time 0.1890 Data 0.0022 Loss 1.6487 (1.4688)	Acc@1 53.125 (59.040)	Acc@5 82.031 (87.308)
+Testing the models......
+Loss: 2.0060, Prec@1: 52.00, Prec@5: 81.97
+Epoch time: 80s
+Saving models
+Epoch: 21  lr: 0.100
+Epoch: [21][000/391]	Time 1.0965 Data 0.8516 Loss 1.4811 (1.4811)	Acc@1 63.281 (63.281)	Acc@5 89.062 (89.062)
+Epoch: [21][100/391]	Time 0.1867 Data 0.0022 Loss 1.3222 (1.3661)	Acc@1 58.594 (61.139)	Acc@5 92.188 (89.016)
+Epoch: [21][200/391]	Time 0.1861 Data 0.0019 Loss 1.5702 (1.3763)	Acc@1 56.250 (60.774)	Acc@5 84.375 (88.728)
+Epoch: [21][300/391]	Time 0.1888 Data 0.0019 Loss 1.3043 (1.3975)	Acc@1 60.156 (60.252)	Acc@5 92.188 (88.260)
+Testing the models......
+Loss: 1.7776, Prec@1: 54.14, Prec@5: 81.87
+Epoch time: 80s
+Saving models
+Epoch: 22  lr: 0.100
+Epoch: [22][000/391]	Time 1.1196 Data 0.8780 Loss 1.4306 (1.4306)	Acc@1 61.719 (61.719)	Acc@5 89.844 (89.844)
+Epoch: [22][100/391]	Time 0.1868 Data 0.0019 Loss 1.2074 (1.2855)	Acc@1 58.594 (63.390)	Acc@5 89.844 (89.480)
+Epoch: [22][200/391]	Time 0.1870 Data 0.0020 Loss 1.2986 (1.3096)	Acc@1 66.406 (62.679)	Acc@5 86.719 (89.160)
+Epoch: [22][300/391]	Time 0.1867 Data 0.0020 Loss 1.6829 (1.3266)	Acc@1 53.906 (62.298)	Acc@5 85.156 (88.904)
+Testing the models......
+Loss: 1.7197, Prec@1: 55.07, Prec@5: 82.94
+Epoch time: 80s
+Saving models
+Epoch: 23  lr: 0.100
+Epoch: [23][000/391]	Time 1.1382 Data 0.9110 Loss 1.1698 (1.1698)	Acc@1 64.062 (64.062)	Acc@5 92.188 (92.188)
+Epoch: [23][100/391]	Time 0.1881 Data 0.0019 Loss 0.9728 (1.1875)	Acc@1 74.219 (65.223)	Acc@5 95.312 (90.927)
+Epoch: [23][200/391]	Time 0.1855 Data 0.0019 Loss 1.2790 (1.2199)	Acc@1 62.500 (64.362)	Acc@5 88.281 (90.598)
+Epoch: [23][300/391]	Time 0.1858 Data 0.0019 Loss 1.2844 (1.2499)	Acc@1 64.062 (63.738)	Acc@5 89.844 (90.192)
+Testing the models......
+Loss: 1.7694, Prec@1: 54.01, Prec@5: 83.10
+Epoch time: 80s
+Epoch: 24  lr: 0.100
+Epoch: [24][000/391]	Time 1.1906 Data 0.9866 Loss 1.2565 (1.2565)	Acc@1 65.625 (65.625)	Acc@5 89.062 (89.062)
+Epoch: [24][100/391]	Time 0.1865 Data 0.0019 Loss 1.2800 (1.1276)	Acc@1 61.719 (66.654)	Acc@5 90.625 (92.041)
+Epoch: [24][200/391]	Time 0.1879 Data 0.0020 Loss 1.1974 (1.1640)	Acc@1 65.625 (65.812)	Acc@5 89.062 (91.480)
+Epoch: [24][300/391]	Time 0.1863 Data 0.0019 Loss 1.1692 (1.1895)	Acc@1 64.844 (65.166)	Acc@5 91.406 (91.175)
+Testing the models......
+Loss: 1.6656, Prec@1: 55.99, Prec@5: 84.39
+Epoch time: 80s
+Saving models
+Epoch: 25  lr: 0.100
+Epoch: [25][000/391]	Time 1.1640 Data 0.9315 Loss 1.0336 (1.0336)	Acc@1 71.875 (71.875)	Acc@5 92.969 (92.969)
+Epoch: [25][100/391]	Time 0.1861 Data 0.0020 Loss 1.0469 (1.0907)	Acc@1 68.750 (67.582)	Acc@5 92.969 (92.652)
+Epoch: [25][200/391]	Time 0.1868 Data 0.0019 Loss 1.2625 (1.1271)	Acc@1 67.969 (66.690)	Acc@5 90.625 (92.055)
+Epoch: [25][300/391]	Time 0.1879 Data 0.0020 Loss 0.8630 (1.1313)	Acc@1 73.438 (66.674)	Acc@5 92.188 (91.897)
+Testing the models......
+Loss: 1.7191, Prec@1: 56.22, Prec@5: 83.99
+Epoch time: 80s
+Saving models
+Epoch: 26  lr: 0.100
+Epoch: [26][000/391]	Time 1.1713 Data 0.9276 Loss 1.2775 (1.2775)	Acc@1 65.625 (65.625)	Acc@5 92.188 (92.188)
+Epoch: [26][100/391]	Time 0.1869 Data 0.0021 Loss 1.1039 (1.0557)	Acc@1 67.188 (68.487)	Acc@5 87.500 (92.837)
+Epoch: [26][200/391]	Time 0.1868 Data 0.0019 Loss 1.4400 (1.0712)	Acc@1 60.156 (68.206)	Acc@5 89.844 (92.588)
+Epoch: [26][300/391]	Time 0.1857 Data 0.0019 Loss 1.4299 (1.0906)	Acc@1 57.031 (67.722)	Acc@5 91.406 (92.291)
+Testing the models......
+Loss: 1.6286, Prec@1: 57.95, Prec@5: 84.66
+Epoch time: 80s
+Saving models
+Epoch: 27  lr: 0.100
+Epoch: [27][000/391]	Time 1.0844 Data 0.8824 Loss 0.8978 (0.8978)	Acc@1 69.531 (69.531)	Acc@5 96.094 (96.094)
+Epoch: [27][100/391]	Time 0.1905 Data 0.0020 Loss 1.0143 (0.9772)	Acc@1 69.531 (71.395)	Acc@5 97.656 (93.967)
+Epoch: [27][200/391]	Time 0.1862 Data 0.0019 Loss 0.8839 (1.0083)	Acc@1 72.656 (70.414)	Acc@5 94.531 (93.377)
+Epoch: [27][300/391]	Time 0.1872 Data 0.0019 Loss 0.9361 (1.0294)	Acc@1 71.094 (69.754)	Acc@5 92.969 (93.093)
+Testing the models......
+Loss: 1.6566, Prec@1: 57.27, Prec@5: 84.69
+Epoch time: 80s
+Epoch: 28  lr: 0.100
+Epoch: [28][000/391]	Time 1.0587 Data 0.8706 Loss 0.8532 (0.8532)	Acc@1 75.781 (75.781)	Acc@5 94.531 (94.531)
+Epoch: [28][100/391]	Time 0.1860 Data 0.0019 Loss 0.8452 (0.9431)	Acc@1 74.219 (71.450)	Acc@5 94.531 (94.191)
+Epoch: [28][200/391]	Time 0.1861 Data 0.0019 Loss 1.1583 (0.9759)	Acc@1 61.719 (70.721)	Acc@5 90.625 (93.867)
+Epoch: [28][300/391]	Time 0.1865 Data 0.0026 Loss 1.2975 (0.9901)	Acc@1 65.625 (70.357)	Acc@5 84.375 (93.631)
+Testing the models......
+Loss: 1.5843, Prec@1: 58.68, Prec@5: 85.33
+Epoch time: 80s
+Saving models
+Epoch: 29  lr: 0.100
+Epoch: [29][000/391]	Time 1.1473 Data 0.9079 Loss 0.8790 (0.8790)	Acc@1 74.219 (74.219)	Acc@5 95.312 (95.312)
+Epoch: [29][100/391]	Time 0.1869 Data 0.0018 Loss 1.0620 (0.8667)	Acc@1 69.531 (74.080)	Acc@5 93.750 (95.096)
+Epoch: [29][200/391]	Time 0.1863 Data 0.0020 Loss 1.0236 (0.9063)	Acc@1 71.094 (72.847)	Acc@5 89.844 (94.520)
+Epoch: [29][300/391]	Time 0.1889 Data 0.0019 Loss 1.0040 (0.9357)	Acc@1 67.188 (72.031)	Acc@5 92.188 (94.163)
+Testing the models......
+Loss: 1.6291, Prec@1: 58.40, Prec@5: 85.17
+Epoch time: 80s
+Epoch: 30  lr: 0.100
+Epoch: [30][000/391]	Time 1.1884 Data 1.0307 Loss 0.8960 (0.8960)	Acc@1 73.438 (73.438)	Acc@5 96.094 (96.094)
+Epoch: [30][100/391]	Time 0.1866 Data 0.0020 Loss 0.8636 (0.8531)	Acc@1 75.781 (74.273)	Acc@5 95.312 (95.251)
+Epoch: [30][200/391]	Time 0.1892 Data 0.0022 Loss 0.8393 (0.8798)	Acc@1 71.875 (73.581)	Acc@5 95.312 (94.819)
+Epoch: [30][300/391]	Time 0.1914 Data 0.0019 Loss 0.9695 (0.9003)	Acc@1 71.875 (73.017)	Acc@5 92.969 (94.555)
+Testing the models......
+Loss: 1.6086, Prec@1: 59.28, Prec@5: 85.41
+Epoch time: 80s
+Saving models
+Epoch: 31  lr: 0.100
+Epoch: [31][000/391]	Time 1.1958 Data 0.9314 Loss 0.7056 (0.7056)	Acc@1 78.906 (78.906)	Acc@5 94.531 (94.531)
+Epoch: [31][100/391]	Time 0.1854 Data 0.0019 Loss 0.8923 (0.8057)	Acc@1 71.094 (75.541)	Acc@5 96.875 (95.761)
+Epoch: [31][200/391]	Time 0.1861 Data 0.0018 Loss 0.9510 (0.8364)	Acc@1 71.875 (74.681)	Acc@5 92.969 (95.437)
+Epoch: [31][300/391]	Time 0.1867 Data 0.0020 Loss 0.7898 (0.8527)	Acc@1 73.438 (74.276)	Acc@5 94.531 (95.284)
+Testing the models......
+Loss: 1.6064, Prec@1: 59.59, Prec@5: 85.93
+Epoch time: 80s
+Saving models
+Epoch: 32  lr: 0.100
+Epoch: [32][000/391]	Time 1.1625 Data 0.8910 Loss 0.7543 (0.7543)	Acc@1 78.125 (78.125)	Acc@5 96.094 (96.094)
+Epoch: [32][100/391]	Time 0.1858 Data 0.0020 Loss 0.6883 (0.7761)	Acc@1 79.688 (76.338)	Acc@5 99.219 (95.908)
+Epoch: [32][200/391]	Time 0.1860 Data 0.0019 Loss 0.6438 (0.8040)	Acc@1 75.781 (75.540)	Acc@5 99.219 (95.709)
+Epoch: [32][300/391]	Time 0.1888 Data 0.0026 Loss 0.6797 (0.8244)	Acc@1 79.688 (74.951)	Acc@5 97.656 (95.518)
+Testing the models......
+Loss: 1.5970, Prec@1: 59.64, Prec@5: 86.28
+Epoch time: 80s
+Saving models
+Epoch: 33  lr: 0.100
+Epoch: [33][000/391]	Time 1.1129 Data 0.8820 Loss 0.5809 (0.5809)	Acc@1 81.250 (81.250)	Acc@5 96.875 (96.875)
+Epoch: [33][100/391]	Time 0.1886 Data 0.0022 Loss 0.6558 (0.7477)	Acc@1 78.906 (77.220)	Acc@5 97.656 (96.117)
+Epoch: [33][200/391]	Time 0.1859 Data 0.0019 Loss 0.9070 (0.7753)	Acc@1 74.219 (76.376)	Acc@5 94.531 (95.969)
+Epoch: [33][300/391]	Time 0.1859 Data 0.0019 Loss 0.8748 (0.7999)	Acc@1 72.656 (75.714)	Acc@5 96.875 (95.803)
+Testing the models......
+Loss: 1.6350, Prec@1: 59.17, Prec@5: 85.05
+Epoch time: 80s
+Epoch: 34  lr: 0.100
+Epoch: [34][000/391]	Time 1.1754 Data 1.0297 Loss 0.7322 (0.7322)	Acc@1 75.000 (75.000)	Acc@5 97.656 (97.656)
+Epoch: [34][100/391]	Time 0.1859 Data 0.0019 Loss 0.8134 (0.7065)	Acc@1 73.438 (78.009)	Acc@5 98.438 (96.875)
+Epoch: [34][200/391]	Time 0.1882 Data 0.0020 Loss 0.8610 (0.7283)	Acc@1 72.656 (77.266)	Acc@5 97.656 (96.568)
+Epoch: [34][300/391]	Time 0.1860 Data 0.0019 Loss 0.7815 (0.7470)	Acc@1 76.562 (76.843)	Acc@5 91.406 (96.335)
+Testing the models......
+Loss: 1.5534, Prec@1: 60.74, Prec@5: 86.82
+Epoch time: 80s
+Saving models
+Epoch: 35  lr: 0.100
+Epoch: [35][000/391]	Time 1.1372 Data 0.8939 Loss 0.6139 (0.6139)	Acc@1 82.031 (82.031)	Acc@5 98.438 (98.438)
+Epoch: [35][100/391]	Time 0.1865 Data 0.0019 Loss 0.7298 (0.6700)	Acc@1 74.219 (79.386)	Acc@5 96.875 (97.161)
+Epoch: [35][200/391]	Time 0.1865 Data 0.0020 Loss 0.7507 (0.7042)	Acc@1 75.781 (78.304)	Acc@5 96.875 (96.922)
+Epoch: [35][300/391]	Time 0.1870 Data 0.0022 Loss 1.0111 (0.7263)	Acc@1 67.188 (77.637)	Acc@5 96.094 (96.641)
+Testing the models......
+Loss: 1.6465, Prec@1: 59.30, Prec@5: 85.79
+Epoch time: 80s
+Epoch: 36  lr: 0.100
+Epoch: [36][000/391]	Time 1.1550 Data 0.9328 Loss 0.6057 (0.6057)	Acc@1 81.250 (81.250)	Acc@5 96.094 (96.094)
+Epoch: [36][100/391]	Time 0.1875 Data 0.0020 Loss 0.6354 (0.6544)	Acc@1 81.250 (79.788)	Acc@5 98.438 (97.045)
+Epoch: [36][200/391]	Time 0.1858 Data 0.0019 Loss 0.7026 (0.6763)	Acc@1 82.812 (79.003)	Acc@5 94.531 (97.019)
+Epoch: [36][300/391]	Time 0.1859 Data 0.0019 Loss 0.7660 (0.6971)	Acc@1 71.875 (78.304)	Acc@5 96.875 (96.820)
+Testing the models......
+Loss: 1.5415, Prec@1: 61.55, Prec@5: 87.05
+Epoch time: 80s
+Saving models
+Epoch: 37  lr: 0.100
+Epoch: [37][000/391]	Time 1.1400 Data 0.9407 Loss 0.5939 (0.5939)	Acc@1 78.906 (78.906)	Acc@5 97.656 (97.656)
+Epoch: [37][100/391]	Time 0.1865 Data 0.0024 Loss 0.5885 (0.6098)	Acc@1 80.469 (81.118)	Acc@5 96.875 (97.664)
+Epoch: [37][200/391]	Time 0.1872 Data 0.0022 Loss 0.6334 (0.6407)	Acc@1 79.688 (80.119)	Acc@5 96.875 (97.349)
+Epoch: [37][300/391]	Time 0.1863 Data 0.0020 Loss 0.8385 (0.6690)	Acc@1 71.094 (79.283)	Acc@5 95.312 (97.161)
+Testing the models......
+Loss: 1.6604, Prec@1: 59.63, Prec@5: 85.38
+Epoch time: 80s
+Epoch: 38  lr: 0.100
+Epoch: [38][000/391]	Time 1.1817 Data 0.9827 Loss 0.9054 (0.9054)	Acc@1 71.094 (71.094)	Acc@5 95.312 (95.312)
+Epoch: [38][100/391]	Time 0.1858 Data 0.0019 Loss 0.5143 (0.6058)	Acc@1 82.031 (80.709)	Acc@5 100.000 (97.881)
+Epoch: [38][200/391]	Time 0.1879 Data 0.0023 Loss 0.5796 (0.6212)	Acc@1 82.812 (80.414)	Acc@5 98.438 (97.695)
+Epoch: [38][300/391]	Time 0.1872 Data 0.0019 Loss 0.7990 (0.6470)	Acc@1 77.344 (79.633)	Acc@5 97.656 (97.451)
+Testing the models......
+Loss: 1.5828, Prec@1: 62.22, Prec@5: 86.93
+Epoch time: 80s
+Saving models
+Epoch: 39  lr: 0.100
+Epoch: [39][000/391]	Time 1.1950 Data 0.9675 Loss 0.6442 (0.6442)	Acc@1 79.688 (79.688)	Acc@5 96.094 (96.094)
+Epoch: [39][100/391]	Time 0.1851 Data 0.0019 Loss 0.5540 (0.5433)	Acc@1 78.125 (83.099)	Acc@5 97.656 (98.198)
+Epoch: [39][200/391]	Time 0.1869 Data 0.0020 Loss 0.8029 (0.5849)	Acc@1 77.344 (81.639)	Acc@5 95.312 (97.893)
+Epoch: [39][300/391]	Time 0.1919 Data 0.0019 Loss 0.5879 (0.6112)	Acc@1 75.000 (80.695)	Acc@5 96.875 (97.617)
+Testing the models......
+Loss: 1.6309, Prec@1: 60.22, Prec@5: 86.53
+Epoch time: 80s
+Epoch: 40  lr: 0.100
+Epoch: [40][000/391]	Time 1.1168 Data 0.9162 Loss 0.6160 (0.6160)	Acc@1 82.031 (82.031)	Acc@5 97.656 (97.656)
+Epoch: [40][100/391]	Time 0.1870 Data 0.0020 Loss 0.5240 (0.5406)	Acc@1 85.938 (82.882)	Acc@5 97.656 (98.213)
+Epoch: [40][200/391]	Time 0.1849 Data 0.0019 Loss 0.5669 (0.5742)	Acc@1 83.594 (81.825)	Acc@5 97.656 (97.987)
+Epoch: [40][300/391]	Time 0.1858 Data 0.0022 Loss 0.7116 (0.5900)	Acc@1 76.562 (81.561)	Acc@5 97.656 (97.789)
+Testing the models......
+Loss: 1.6036, Prec@1: 61.16, Prec@5: 86.74
+Epoch time: 80s
+Epoch: 41  lr: 0.100
+Epoch: [41][000/391]	Time 1.0824 Data 0.8785 Loss 0.4256 (0.4256)	Acc@1 84.375 (84.375)	Acc@5 99.219 (99.219)
+Epoch: [41][100/391]	Time 0.1853 Data 0.0021 Loss 0.5042 (0.5340)	Acc@1 85.156 (83.625)	Acc@5 99.219 (98.221)
+Epoch: [41][200/391]	Time 0.1851 Data 0.0019 Loss 0.5267 (0.5593)	Acc@1 81.250 (82.653)	Acc@5 97.656 (98.041)
+Epoch: [41][300/391]	Time 0.1869 Data 0.0019 Loss 0.9103 (0.5874)	Acc@1 72.656 (81.696)	Acc@5 96.094 (97.794)
+Testing the models......
+Loss: 1.5798, Prec@1: 61.82, Prec@5: 87.54
+Epoch time: 80s
+Epoch: 42  lr: 0.100
+Epoch: [42][000/391]	Time 1.0936 Data 0.8943 Loss 0.4016 (0.4016)	Acc@1 88.281 (88.281)	Acc@5 100.000 (100.000)
+Epoch: [42][100/391]	Time 0.1853 Data 0.0019 Loss 0.6836 (0.5162)	Acc@1 78.125 (83.277)	Acc@5 98.438 (98.407)
+Epoch: [42][200/391]	Time 0.1856 Data 0.0021 Loss 0.7384 (0.5495)	Acc@1 75.781 (82.474)	Acc@5 96.094 (98.158)
+Epoch: [42][300/391]	Time 0.1857 Data 0.0019 Loss 0.5970 (0.5659)	Acc@1 80.469 (82.101)	Acc@5 96.875 (97.999)
+Testing the models......
+Loss: 1.5735, Prec@1: 63.74, Prec@5: 86.76
+Epoch time: 80s
+Saving models
+Epoch: 43  lr: 0.100
+Epoch: [43][000/391]	Time 1.1829 Data 0.9365 Loss 0.4051 (0.4051)	Acc@1 86.719 (86.719)	Acc@5 99.219 (99.219)
+Epoch: [43][100/391]	Time 0.1849 Data 0.0018 Loss 0.6085 (0.5047)	Acc@1 81.250 (83.872)	Acc@5 97.656 (98.399)
+Epoch: [43][200/391]	Time 0.1882 Data 0.0021 Loss 0.3730 (0.5289)	Acc@1 89.062 (83.197)	Acc@5 100.000 (98.251)
+Epoch: [43][300/391]	Time 0.1862 Data 0.0019 Loss 0.6034 (0.5539)	Acc@1 77.344 (82.436)	Acc@5 98.438 (98.007)
+Testing the models......
+Loss: 1.6116, Prec@1: 62.34, Prec@5: 86.67
+Epoch time: 80s
+Epoch: 44  lr: 0.100
+Epoch: [44][000/391]	Time 1.1121 Data 0.9131 Loss 0.4801 (0.4801)	Acc@1 88.281 (88.281)	Acc@5 100.000 (100.000)
+Epoch: [44][100/391]	Time 0.1853 Data 0.0018 Loss 0.4558 (0.5006)	Acc@1 89.062 (84.476)	Acc@5 98.438 (98.352)
+Epoch: [44][200/391]	Time 0.1882 Data 0.0018 Loss 0.5752 (0.5065)	Acc@1 82.031 (84.107)	Acc@5 98.438 (98.438)
+Epoch: [44][300/391]	Time 0.1864 Data 0.0019 Loss 0.5515 (0.5286)	Acc@1 78.125 (83.360)	Acc@5 100.000 (98.313)
+Testing the models......
+Loss: 1.5852, Prec@1: 62.08, Prec@5: 87.04
+Epoch time: 80s
+Epoch: 45  lr: 0.100
+Epoch: [45][000/391]	Time 1.1252 Data 0.8675 Loss 0.3896 (0.3896)	Acc@1 85.938 (85.938)	Acc@5 99.219 (99.219)
+Epoch: [45][100/391]	Time 0.1877 Data 0.0020 Loss 0.4859 (0.4824)	Acc@1 82.812 (84.653)	Acc@5 100.000 (98.662)
+Epoch: [45][200/391]	Time 0.1871 Data 0.0019 Loss 0.6169 (0.5038)	Acc@1 81.250 (84.068)	Acc@5 96.875 (98.476)
+Epoch: [45][300/391]	Time 0.1862 Data 0.0020 Loss 0.5558 (0.5121)	Acc@1 81.250 (83.833)	Acc@5 97.656 (98.328)
+Testing the models......
+Loss: 1.6692, Prec@1: 61.12, Prec@5: 86.55
+Epoch time: 80s
+Epoch: 46  lr: 0.100
+Epoch: [46][000/391]	Time 1.1878 Data 0.9667 Loss 0.3655 (0.3655)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [46][100/391]	Time 0.1863 Data 0.0019 Loss 0.5206 (0.4485)	Acc@1 78.906 (85.767)	Acc@5 100.000 (98.894)
+Epoch: [46][200/391]	Time 0.1864 Data 0.0020 Loss 0.3971 (0.4561)	Acc@1 87.500 (85.417)	Acc@5 98.438 (98.830)
+Epoch: [46][300/391]	Time 0.1874 Data 0.0020 Loss 0.5433 (0.4887)	Acc@1 83.594 (84.344)	Acc@5 97.656 (98.596)
+Testing the models......
+Loss: 1.8911, Prec@1: 59.02, Prec@5: 84.72
+Epoch time: 80s
+Epoch: 47  lr: 0.100
+Epoch: [47][000/391]	Time 1.1134 Data 0.8934 Loss 0.4611 (0.4611)	Acc@1 86.719 (86.719)	Acc@5 99.219 (99.219)
+Epoch: [47][100/391]	Time 0.1861 Data 0.0020 Loss 0.4258 (0.4389)	Acc@1 87.500 (86.193)	Acc@5 99.219 (98.840)
+Epoch: [47][200/391]	Time 0.1882 Data 0.0021 Loss 0.4636 (0.4600)	Acc@1 85.156 (85.580)	Acc@5 99.219 (98.772)
+Epoch: [47][300/391]	Time 0.1862 Data 0.0020 Loss 0.6778 (0.4894)	Acc@1 84.375 (84.562)	Acc@5 95.312 (98.578)
+Testing the models......
+Loss: 1.6103, Prec@1: 61.90, Prec@5: 86.59
+Epoch time: 80s
+Epoch: 48  lr: 0.100
+Epoch: [48][000/391]	Time 1.0984 Data 0.8784 Loss 0.4768 (0.4768)	Acc@1 85.938 (85.938)	Acc@5 99.219 (99.219)
+Epoch: [48][100/391]	Time 0.1893 Data 0.0020 Loss 0.5002 (0.4567)	Acc@1 84.375 (85.613)	Acc@5 99.219 (98.708)
+Epoch: [48][200/391]	Time 0.1859 Data 0.0019 Loss 0.4773 (0.4640)	Acc@1 89.062 (85.456)	Acc@5 99.219 (98.682)
+Epoch: [48][300/391]	Time 0.1867 Data 0.0019 Loss 0.6219 (0.4777)	Acc@1 79.688 (84.925)	Acc@5 96.094 (98.640)
+Testing the models......
+Loss: 1.5779, Prec@1: 63.04, Prec@5: 87.61
+Epoch time: 80s
+Epoch: 49  lr: 0.100
+Epoch: [49][000/391]	Time 1.1584 Data 0.9410 Loss 0.3625 (0.3625)	Acc@1 90.625 (90.625)	Acc@5 99.219 (99.219)
+Epoch: [49][100/391]	Time 0.1878 Data 0.0020 Loss 0.4273 (0.3884)	Acc@1 82.812 (87.771)	Acc@5 99.219 (99.188)
+Epoch: [49][200/391]	Time 0.1862 Data 0.0021 Loss 0.4431 (0.4230)	Acc@1 87.500 (86.719)	Acc@5 98.438 (98.896)
+Epoch: [49][300/391]	Time 0.1869 Data 0.0019 Loss 0.4080 (0.4464)	Acc@1 88.281 (85.932)	Acc@5 99.219 (98.772)
+Testing the models......
+Loss: 1.7557, Prec@1: 60.63, Prec@5: 85.82
+Epoch time: 80s
+Epoch: 50  lr: 0.100
+Epoch: [50][000/391]	Time 1.1657 Data 0.9547 Loss 0.5932 (0.5932)	Acc@1 82.031 (82.031)	Acc@5 99.219 (99.219)
+Epoch: [50][100/391]	Time 0.1865 Data 0.0019 Loss 0.3056 (0.4272)	Acc@1 91.406 (86.510)	Acc@5 100.000 (98.994)
+Epoch: [50][200/391]	Time 0.1862 Data 0.0019 Loss 0.4451 (0.4378)	Acc@1 86.719 (86.136)	Acc@5 99.219 (98.908)
+Epoch: [50][300/391]	Time 0.1890 Data 0.0031 Loss 0.5822 (0.4511)	Acc@1 78.906 (85.756)	Acc@5 99.219 (98.816)
+Testing the models......
+Loss: 1.6923, Prec@1: 61.46, Prec@5: 86.55
+Epoch time: 80s
+Epoch: 51  lr: 0.100
+Epoch: [51][000/391]	Time 1.0615 Data 0.8470 Loss 0.4466 (0.4466)	Acc@1 88.281 (88.281)	Acc@5 99.219 (99.219)
+Epoch: [51][100/391]	Time 0.1877 Data 0.0019 Loss 0.3792 (0.3897)	Acc@1 86.719 (87.817)	Acc@5 99.219 (99.196)
+Epoch: [51][200/391]	Time 0.1867 Data 0.0019 Loss 0.4398 (0.4048)	Acc@1 85.938 (87.119)	Acc@5 97.656 (99.083)
+Epoch: [51][300/391]	Time 0.1862 Data 0.0019 Loss 0.5155 (0.4344)	Acc@1 83.594 (86.239)	Acc@5 99.219 (98.912)
+Testing the models......
+Loss: 1.7287, Prec@1: 60.91, Prec@5: 86.35
+Epoch time: 80s
+Epoch: 52  lr: 0.100
+Epoch: [52][000/391]	Time 1.2028 Data 1.0097 Loss 0.4377 (0.4377)	Acc@1 86.719 (86.719)	Acc@5 100.000 (100.000)
+Epoch: [52][100/391]	Time 0.1870 Data 0.0022 Loss 0.5602 (0.3994)	Acc@1 82.031 (87.508)	Acc@5 99.219 (99.141)
+Epoch: [52][200/391]	Time 0.1863 Data 0.0018 Loss 0.4530 (0.4116)	Acc@1 84.375 (86.983)	Acc@5 97.656 (99.044)
+Epoch: [52][300/391]	Time 0.1860 Data 0.0019 Loss 0.4252 (0.4402)	Acc@1 83.594 (86.026)	Acc@5 99.219 (98.879)
+Testing the models......
+Loss: 1.7086, Prec@1: 61.19, Prec@5: 86.54
+Epoch time: 80s
+Epoch: 53  lr: 0.100
+Epoch: [53][000/391]	Time 1.1273 Data 0.8591 Loss 0.3968 (0.3968)	Acc@1 89.844 (89.844)	Acc@5 98.438 (98.438)
+Epoch: [53][100/391]	Time 0.1864 Data 0.0019 Loss 0.3616 (0.3666)	Acc@1 89.062 (88.707)	Acc@5 99.219 (99.296)
+Epoch: [53][200/391]	Time 0.1867 Data 0.0020 Loss 0.2981 (0.3920)	Acc@1 90.625 (87.788)	Acc@5 99.219 (99.160)
+Epoch: [53][300/391]	Time 0.1862 Data 0.0019 Loss 0.4952 (0.4104)	Acc@1 85.156 (87.178)	Acc@5 100.000 (99.058)
+Testing the models......
+Loss: 1.6688, Prec@1: 61.91, Prec@5: 87.00
+Epoch time: 80s
+Epoch: 54  lr: 0.100
+Epoch: [54][000/391]	Time 1.1691 Data 0.9737 Loss 0.4619 (0.4619)	Acc@1 85.156 (85.156)	Acc@5 97.656 (97.656)
+Epoch: [54][100/391]	Time 0.1862 Data 0.0019 Loss 0.5183 (0.3564)	Acc@1 82.031 (88.761)	Acc@5 99.219 (99.242)
+Epoch: [54][200/391]	Time 0.1861 Data 0.0019 Loss 0.4458 (0.3820)	Acc@1 81.250 (87.982)	Acc@5 100.000 (99.110)
+Epoch: [54][300/391]	Time 0.1886 Data 0.0020 Loss 0.3852 (0.4071)	Acc@1 88.281 (87.163)	Acc@5 99.219 (99.019)
+Testing the models......
+Loss: 1.6760, Prec@1: 62.22, Prec@5: 86.23
+Epoch time: 80s
+Epoch: 55  lr: 0.100
+Epoch: [55][000/391]	Time 1.1526 Data 0.8901 Loss 0.3149 (0.3149)	Acc@1 89.844 (89.844)	Acc@5 99.219 (99.219)
+Epoch: [55][100/391]	Time 0.1886 Data 0.0019 Loss 0.3898 (0.3626)	Acc@1 89.844 (88.591)	Acc@5 99.219 (99.281)
+Epoch: [55][200/391]	Time 0.1857 Data 0.0020 Loss 0.5046 (0.3878)	Acc@1 85.938 (87.725)	Acc@5 100.000 (99.238)
+Epoch: [55][300/391]	Time 0.1869 Data 0.0020 Loss 0.3867 (0.4030)	Acc@1 89.062 (87.220)	Acc@5 99.219 (99.146)
+Testing the models......
+Loss: 1.7400, Prec@1: 61.81, Prec@5: 86.02
+Epoch time: 80s
+Epoch: 56  lr: 0.100
+Epoch: [56][000/391]	Time 1.1061 Data 0.8877 Loss 0.4523 (0.4523)	Acc@1 85.938 (85.938)	Acc@5 99.219 (99.219)
+Epoch: [56][100/391]	Time 0.1860 Data 0.0020 Loss 0.3798 (0.3747)	Acc@1 83.594 (88.096)	Acc@5 100.000 (99.118)
+Epoch: [56][200/391]	Time 0.1865 Data 0.0020 Loss 0.4073 (0.3807)	Acc@1 88.281 (88.052)	Acc@5 100.000 (99.164)
+Epoch: [56][300/391]	Time 0.1862 Data 0.0021 Loss 0.3871 (0.3971)	Acc@1 88.281 (87.544)	Acc@5 98.438 (99.133)
+Testing the models......
+Loss: 1.7425, Prec@1: 61.71, Prec@5: 86.79
+Epoch time: 80s
+Epoch: 57  lr: 0.100
+Epoch: [57][000/391]	Time 1.1013 Data 0.8813 Loss 0.2815 (0.2815)	Acc@1 91.406 (91.406)	Acc@5 99.219 (99.219)
+Epoch: [57][100/391]	Time 0.1862 Data 0.0019 Loss 0.3556 (0.3574)	Acc@1 86.719 (88.544)	Acc@5 99.219 (99.304)
+Epoch: [57][200/391]	Time 0.1862 Data 0.0019 Loss 0.4680 (0.3586)	Acc@1 82.031 (88.573)	Acc@5 97.656 (99.277)
+Epoch: [57][300/391]	Time 0.1874 Data 0.0021 Loss 0.4884 (0.3744)	Acc@1 81.250 (88.058)	Acc@5 99.219 (99.214)
+Testing the models......
+Loss: 1.6623, Prec@1: 63.18, Prec@5: 86.80
+Epoch time: 80s
+Epoch: 58  lr: 0.100
+Epoch: [58][000/391]	Time 1.1170 Data 0.9294 Loss 0.2844 (0.2844)	Acc@1 92.188 (92.188)	Acc@5 100.000 (100.000)
+Epoch: [58][100/391]	Time 0.1880 Data 0.0019 Loss 0.3781 (0.3581)	Acc@1 87.500 (88.444)	Acc@5 100.000 (99.335)
+Epoch: [58][200/391]	Time 0.1867 Data 0.0019 Loss 0.3444 (0.3704)	Acc@1 90.625 (88.273)	Acc@5 99.219 (99.269)
+Epoch: [58][300/391]	Time 0.1861 Data 0.0019 Loss 0.3785 (0.3840)	Acc@1 90.625 (87.788)	Acc@5 98.438 (99.190)
+Testing the models......
+Loss: 1.6639, Prec@1: 62.93, Prec@5: 87.05
+Epoch time: 80s
+Epoch: 59  lr: 0.100
+Epoch: [59][000/391]	Time 1.1767 Data 0.9692 Loss 0.4288 (0.4288)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [59][100/391]	Time 0.1875 Data 0.0029 Loss 0.3043 (0.3416)	Acc@1 89.844 (89.109)	Acc@5 98.438 (99.281)
+Epoch: [59][200/391]	Time 0.1857 Data 0.0019 Loss 0.2402 (0.3592)	Acc@1 89.844 (88.530)	Acc@5 100.000 (99.300)
+Epoch: [59][300/391]	Time 0.1889 Data 0.0020 Loss 0.5274 (0.3824)	Acc@1 82.031 (87.858)	Acc@5 96.875 (99.193)
+Testing the models......
+Loss: 1.7325, Prec@1: 61.61, Prec@5: 85.90
+Epoch time: 80s
+Epoch: 60  lr: 0.100
+Epoch: [60][000/391]	Time 1.0543 Data 0.8624 Loss 0.3543 (0.3543)	Acc@1 89.062 (89.062)	Acc@5 99.219 (99.219)
+Epoch: [60][100/391]	Time 0.1859 Data 0.0019 Loss 0.4324 (0.3396)	Acc@1 89.062 (89.101)	Acc@5 99.219 (99.412)
+Epoch: [60][200/391]	Time 0.1869 Data 0.0032 Loss 0.3285 (0.3426)	Acc@1 88.281 (89.062)	Acc@5 99.219 (99.355)
+Epoch: [60][300/391]	Time 0.1853 Data 0.0019 Loss 0.4643 (0.3615)	Acc@1 83.594 (88.450)	Acc@5 99.219 (99.247)
+Testing the models......
+Loss: 1.6519, Prec@1: 63.32, Prec@5: 86.90
+Epoch time: 80s
+Epoch: 61  lr: 0.100
+Epoch: [61][000/391]	Time 1.2443 Data 0.9799 Loss 0.3666 (0.3666)	Acc@1 87.500 (87.500)	Acc@5 100.000 (100.000)
+Epoch: [61][100/391]	Time 0.1862 Data 0.0019 Loss 0.3475 (0.3343)	Acc@1 90.625 (89.418)	Acc@5 99.219 (99.482)
+Epoch: [61][200/391]	Time 0.1860 Data 0.0020 Loss 0.3642 (0.3462)	Acc@1 88.281 (89.136)	Acc@5 99.219 (99.405)
+Epoch: [61][300/391]	Time 0.1855 Data 0.0019 Loss 0.3258 (0.3724)	Acc@1 86.719 (88.297)	Acc@5 100.000 (99.206)
+Testing the models......
+Loss: 1.6684, Prec@1: 63.45, Prec@5: 86.61
+Epoch time: 80s
+Epoch: 62  lr: 0.100
+Epoch: [62][000/391]	Time 1.1419 Data 0.9264 Loss 0.2622 (0.2622)	Acc@1 92.969 (92.969)	Acc@5 98.438 (98.438)
+Epoch: [62][100/391]	Time 0.1861 Data 0.0019 Loss 0.2455 (0.3372)	Acc@1 90.625 (89.380)	Acc@5 100.000 (99.296)
+Epoch: [62][200/391]	Time 0.1863 Data 0.0020 Loss 0.3851 (0.3546)	Acc@1 83.594 (88.822)	Acc@5 100.000 (99.262)
+Epoch: [62][300/391]	Time 0.1880 Data 0.0021 Loss 0.3841 (0.3662)	Acc@1 86.719 (88.434)	Acc@5 98.438 (99.240)
+Testing the models......
+Loss: 1.7510, Prec@1: 61.83, Prec@5: 86.29
+Epoch time: 80s
+Epoch: 63  lr: 0.100
+Epoch: [63][000/391]	Time 1.1270 Data 0.9663 Loss 0.3636 (0.3636)	Acc@1 85.938 (85.938)	Acc@5 100.000 (100.000)
+Epoch: [63][100/391]	Time 0.1871 Data 0.0019 Loss 0.3677 (0.3273)	Acc@1 89.062 (89.619)	Acc@5 100.000 (99.559)
+Epoch: [63][200/391]	Time 0.1887 Data 0.0021 Loss 0.3239 (0.3289)	Acc@1 89.844 (89.630)	Acc@5 100.000 (99.475)
+Epoch: [63][300/391]	Time 0.1867 Data 0.0020 Loss 0.2700 (0.3456)	Acc@1 90.625 (89.024)	Acc@5 100.000 (99.416)
+Testing the models......
+Loss: 1.6617, Prec@1: 62.96, Prec@5: 86.40
+Epoch time: 80s
+Epoch: 64  lr: 0.100
+Epoch: [64][000/391]	Time 1.2093 Data 0.9979 Loss 0.3031 (0.3031)	Acc@1 89.062 (89.062)	Acc@5 100.000 (100.000)
+Epoch: [64][100/391]	Time 0.1859 Data 0.0020 Loss 0.2039 (0.3454)	Acc@1 94.531 (89.279)	Acc@5 100.000 (99.366)
+Epoch: [64][200/391]	Time 0.1888 Data 0.0020 Loss 0.4683 (0.3616)	Acc@1 84.375 (88.549)	Acc@5 100.000 (99.277)
+Epoch: [64][300/391]	Time 0.1865 Data 0.0020 Loss 0.4361 (0.3685)	Acc@1 87.500 (88.424)	Acc@5 97.656 (99.208)
+Testing the models......
+Loss: 1.6880, Prec@1: 62.89, Prec@5: 86.90
+Epoch time: 80s
+Epoch: 65  lr: 0.100
+Epoch: [65][000/391]	Time 1.1043 Data 0.9045 Loss 0.2478 (0.2478)	Acc@1 92.969 (92.969)	Acc@5 100.000 (100.000)
+Epoch: [65][100/391]	Time 0.1858 Data 0.0019 Loss 0.2553 (0.3336)	Acc@1 92.188 (89.496)	Acc@5 99.219 (99.381)
+Epoch: [65][200/391]	Time 0.1869 Data 0.0019 Loss 0.5005 (0.3452)	Acc@1 82.031 (89.109)	Acc@5 98.438 (99.296)
+Epoch: [65][300/391]	Time 0.1865 Data 0.0020 Loss 0.4627 (0.3651)	Acc@1 85.156 (88.479)	Acc@5 99.219 (99.234)
+Testing the models......
+Loss: 1.7881, Prec@1: 62.15, Prec@5: 85.70
+Epoch time: 80s
+Epoch: 66  lr: 0.100
+Epoch: [66][000/391]	Time 1.1549 Data 0.9479 Loss 0.3168 (0.3168)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [66][100/391]	Time 0.1866 Data 0.0020 Loss 0.3023 (0.3188)	Acc@1 89.844 (90.053)	Acc@5 100.000 (99.420)
+Epoch: [66][200/391]	Time 0.1908 Data 0.0020 Loss 0.3479 (0.3355)	Acc@1 90.625 (89.447)	Acc@5 100.000 (99.401)
+Epoch: [66][300/391]	Time 0.1868 Data 0.0019 Loss 0.3567 (0.3516)	Acc@1 89.062 (88.907)	Acc@5 100.000 (99.281)
+Testing the models......
+Loss: 1.7588, Prec@1: 62.47, Prec@5: 86.63
+Epoch time: 80s
+Epoch: 67  lr: 0.100
+Epoch: [67][000/391]	Time 1.1407 Data 0.9113 Loss 0.1568 (0.1568)	Acc@1 96.875 (96.875)	Acc@5 100.000 (100.000)
+Epoch: [67][100/391]	Time 0.1857 Data 0.0019 Loss 0.3426 (0.3184)	Acc@1 88.281 (90.207)	Acc@5 100.000 (99.435)
+Epoch: [67][200/391]	Time 0.1864 Data 0.0025 Loss 0.2547 (0.3299)	Acc@1 92.969 (89.743)	Acc@5 100.000 (99.378)
+Epoch: [67][300/391]	Time 0.1857 Data 0.0020 Loss 0.5198 (0.3349)	Acc@1 78.906 (89.537)	Acc@5 99.219 (99.356)
+Testing the models......
+Loss: 1.6977, Prec@1: 63.41, Prec@5: 86.87
+Epoch time: 80s
+Epoch: 68  lr: 0.100
+Epoch: [68][000/391]	Time 1.1380 Data 0.9400 Loss 0.2206 (0.2206)	Acc@1 92.188 (92.188)	Acc@5 100.000 (100.000)
+Epoch: [68][100/391]	Time 0.1855 Data 0.0019 Loss 0.2266 (0.3026)	Acc@1 92.188 (90.524)	Acc@5 100.000 (99.520)
+Epoch: [68][200/391]	Time 0.1864 Data 0.0020 Loss 0.3542 (0.3118)	Acc@1 89.062 (90.244)	Acc@5 98.438 (99.456)
+Epoch: [68][300/391]	Time 0.1868 Data 0.0019 Loss 0.3750 (0.3256)	Acc@1 88.281 (89.675)	Acc@5 98.438 (99.437)
+Testing the models......
+Loss: 1.6843, Prec@1: 62.98, Prec@5: 86.44
+Epoch time: 80s
+Epoch: 69  lr: 0.100
+Epoch: [69][000/391]	Time 1.1297 Data 0.9016 Loss 0.3373 (0.3373)	Acc@1 90.625 (90.625)	Acc@5 98.438 (98.438)
+Epoch: [69][100/391]	Time 0.1862 Data 0.0019 Loss 0.3005 (0.3023)	Acc@1 91.406 (90.362)	Acc@5 100.000 (99.544)
+Epoch: [69][200/391]	Time 0.1864 Data 0.0020 Loss 0.2682 (0.3040)	Acc@1 91.406 (90.431)	Acc@5 100.000 (99.534)
+Epoch: [69][300/391]	Time 0.1865 Data 0.0021 Loss 0.2618 (0.3159)	Acc@1 89.844 (90.083)	Acc@5 100.000 (99.463)
+Testing the models......
+Loss: 1.7183, Prec@1: 62.73, Prec@5: 86.35
+Epoch time: 80s
+Epoch: 70  lr: 0.100
+Epoch: [70][000/391]	Time 1.0912 Data 0.8818 Loss 0.3115 (0.3115)	Acc@1 89.062 (89.062)	Acc@5 99.219 (99.219)
+Epoch: [70][100/391]	Time 0.1865 Data 0.0020 Loss 0.3500 (0.3023)	Acc@1 87.500 (90.787)	Acc@5 98.438 (99.435)
+Epoch: [70][200/391]	Time 0.1857 Data 0.0019 Loss 0.2625 (0.3159)	Acc@1 92.188 (90.236)	Acc@5 100.000 (99.429)
+Epoch: [70][300/391]	Time 0.1868 Data 0.0022 Loss 0.3407 (0.3387)	Acc@1 90.625 (89.392)	Acc@5 98.438 (99.349)
+Testing the models......
+Loss: 1.7247, Prec@1: 62.95, Prec@5: 86.66
+Epoch time: 80s
+Epoch: 71  lr: 0.100
+Epoch: [71][000/391]	Time 1.0913 Data 0.9320 Loss 0.3412 (0.3412)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [71][100/391]	Time 0.1865 Data 0.0019 Loss 0.2404 (0.3063)	Acc@1 94.531 (90.424)	Acc@5 98.438 (99.544)
+Epoch: [71][200/391]	Time 0.1860 Data 0.0019 Loss 0.3392 (0.3218)	Acc@1 87.500 (89.921)	Acc@5 99.219 (99.433)
+Epoch: [71][300/391]	Time 0.1888 Data 0.0019 Loss 0.3553 (0.3349)	Acc@1 89.844 (89.556)	Acc@5 99.219 (99.356)
+Testing the models......
+Loss: 1.7072, Prec@1: 62.47, Prec@5: 86.39
+Epoch time: 80s
+Epoch: 72  lr: 0.100
+Epoch: [72][000/391]	Time 1.1309 Data 0.9724 Loss 0.3591 (0.3591)	Acc@1 89.062 (89.062)	Acc@5 99.219 (99.219)
+Epoch: [72][100/391]	Time 0.1861 Data 0.0021 Loss 0.2018 (0.3017)	Acc@1 94.531 (90.408)	Acc@5 100.000 (99.520)
+Epoch: [72][200/391]	Time 0.1857 Data 0.0019 Loss 0.4467 (0.3178)	Acc@1 90.625 (89.852)	Acc@5 98.438 (99.468)
+Epoch: [72][300/391]	Time 0.1859 Data 0.0019 Loss 0.2624 (0.3325)	Acc@1 90.625 (89.454)	Acc@5 99.219 (99.439)
+Testing the models......
+Loss: 1.7150, Prec@1: 63.15, Prec@5: 86.05
+Epoch time: 80s
+Epoch: 73  lr: 0.100
+Epoch: [73][000/391]	Time 1.1680 Data 0.9013 Loss 0.2812 (0.2812)	Acc@1 89.062 (89.062)	Acc@5 99.219 (99.219)
+Epoch: [73][100/391]	Time 0.1864 Data 0.0020 Loss 0.2861 (0.2855)	Acc@1 91.406 (91.089)	Acc@5 100.000 (99.582)
+Epoch: [73][200/391]	Time 0.1861 Data 0.0021 Loss 0.2349 (0.2892)	Acc@1 92.969 (91.006)	Acc@5 99.219 (99.557)
+Epoch: [73][300/391]	Time 0.1859 Data 0.0019 Loss 0.3053 (0.3176)	Acc@1 89.062 (90.103)	Acc@5 100.000 (99.437)
+Testing the models......
+Loss: 1.7696, Prec@1: 62.02, Prec@5: 85.78
+Epoch time: 80s
+Epoch: 74  lr: 0.100
+Epoch: [74][000/391]	Time 1.1446 Data 0.9236 Loss 0.2763 (0.2763)	Acc@1 92.969 (92.969)	Acc@5 100.000 (100.000)
+Epoch: [74][100/391]	Time 0.1860 Data 0.0018 Loss 0.3251 (0.2761)	Acc@1 89.062 (91.437)	Acc@5 99.219 (99.567)
+Epoch: [74][200/391]	Time 0.1862 Data 0.0021 Loss 0.3493 (0.2921)	Acc@1 91.406 (90.885)	Acc@5 99.219 (99.518)
+Epoch: [74][300/391]	Time 0.1859 Data 0.0019 Loss 0.2167 (0.3089)	Acc@1 96.094 (90.417)	Acc@5 100.000 (99.413)
+Testing the models......
+Loss: 1.6361, Prec@1: 63.93, Prec@5: 87.37
+Epoch time: 80s
+Saving models
+Epoch: 75  lr: 0.100
+Epoch: [75][000/391]	Time 1.1679 Data 0.9569 Loss 0.2924 (0.2924)	Acc@1 90.625 (90.625)	Acc@5 100.000 (100.000)
+Epoch: [75][100/391]	Time 0.1884 Data 0.0020 Loss 0.2275 (0.2784)	Acc@1 92.969 (91.484)	Acc@5 100.000 (99.466)
+Epoch: [75][200/391]	Time 0.1858 Data 0.0020 Loss 0.4100 (0.2988)	Acc@1 85.938 (90.656)	Acc@5 98.438 (99.413)
+Epoch: [75][300/391]	Time 0.1859 Data 0.0028 Loss 0.4778 (0.3106)	Acc@1 84.375 (90.316)	Acc@5 98.438 (99.380)
+Testing the models......
+Loss: 1.7151, Prec@1: 63.38, Prec@5: 86.57
+Epoch time: 80s
+Epoch: 76  lr: 0.100
+Epoch: [76][000/391]	Time 1.1402 Data 0.9312 Loss 0.3894 (0.3894)	Acc@1 85.156 (85.156)	Acc@5 100.000 (100.000)
+Epoch: [76][100/391]	Time 0.1860 Data 0.0024 Loss 0.2449 (0.2857)	Acc@1 95.312 (90.996)	Acc@5 100.000 (99.582)
+Epoch: [76][200/391]	Time 0.1888 Data 0.0019 Loss 0.2905 (0.2945)	Acc@1 90.625 (90.695)	Acc@5 99.219 (99.557)
+Epoch: [76][300/391]	Time 0.1860 Data 0.0019 Loss 0.3394 (0.3068)	Acc@1 90.625 (90.295)	Acc@5 98.438 (99.429)
+Testing the models......
+Loss: 1.7987, Prec@1: 61.40, Prec@5: 85.78
+Epoch time: 80s
+Epoch: 77  lr: 0.100
+Epoch: [77][000/391]	Time 1.0931 Data 0.8890 Loss 0.3122 (0.3122)	Acc@1 91.406 (91.406)	Acc@5 99.219 (99.219)
+Epoch: [77][100/391]	Time 0.1854 Data 0.0021 Loss 0.2231 (0.3001)	Acc@1 95.312 (90.733)	Acc@5 100.000 (99.435)
+Epoch: [77][200/391]	Time 0.1859 Data 0.0019 Loss 0.3262 (0.2976)	Acc@1 89.062 (90.819)	Acc@5 100.000 (99.479)
+Epoch: [77][300/391]	Time 0.1918 Data 0.0020 Loss 0.3742 (0.3152)	Acc@1 89.844 (90.246)	Acc@5 99.219 (99.447)
+Testing the models......
+Loss: 1.7310, Prec@1: 63.47, Prec@5: 86.56
+Epoch time: 80s
+Epoch: 78  lr: 0.100
+Epoch: [78][000/391]	Time 1.1519 Data 0.9689 Loss 0.3164 (0.3164)	Acc@1 90.625 (90.625)	Acc@5 100.000 (100.000)
+Epoch: [78][100/391]	Time 0.1863 Data 0.0021 Loss 0.2684 (0.2810)	Acc@1 92.969 (91.406)	Acc@5 100.000 (99.551)
+Epoch: [78][200/391]	Time 0.1864 Data 0.0019 Loss 0.3547 (0.2936)	Acc@1 89.062 (90.905)	Acc@5 100.000 (99.514)
+Epoch: [78][300/391]	Time 0.1872 Data 0.0024 Loss 0.3108 (0.3026)	Acc@1 88.281 (90.537)	Acc@5 99.219 (99.483)
+Testing the models......
+Loss: 1.8408, Prec@1: 61.41, Prec@5: 85.40
+Epoch time: 80s
+Epoch: 79  lr: 0.100
+Epoch: [79][000/391]	Time 1.1356 Data 0.8692 Loss 0.2562 (0.2562)	Acc@1 92.969 (92.969)	Acc@5 98.438 (98.438)
+Epoch: [79][100/391]	Time 0.1859 Data 0.0019 Loss 0.2380 (0.2746)	Acc@1 94.531 (91.406)	Acc@5 100.000 (99.489)
+Epoch: [79][200/391]	Time 0.1861 Data 0.0020 Loss 0.3216 (0.2949)	Acc@1 88.281 (90.633)	Acc@5 100.000 (99.448)
+Epoch: [79][300/391]	Time 0.1858 Data 0.0020 Loss 0.4512 (0.3157)	Acc@1 88.281 (89.945)	Acc@5 100.000 (99.403)
+Testing the models......
+Loss: 1.6645, Prec@1: 63.83, Prec@5: 86.85
+Epoch time: 80s
+Epoch: 80  lr: 0.100
+Epoch: [80][000/391]	Time 1.1401 Data 0.9194 Loss 0.3019 (0.3019)	Acc@1 90.625 (90.625)	Acc@5 100.000 (100.000)
+Epoch: [80][100/391]	Time 0.1874 Data 0.0020 Loss 0.3772 (0.2910)	Acc@1 87.500 (90.749)	Acc@5 99.219 (99.482)
+Epoch: [80][200/391]	Time 0.1856 Data 0.0019 Loss 0.4198 (0.2941)	Acc@1 85.156 (90.773)	Acc@5 98.438 (99.471)
+Epoch: [80][300/391]	Time 0.1866 Data 0.0021 Loss 0.3219 (0.3092)	Acc@1 89.844 (90.319)	Acc@5 98.438 (99.455)
+Testing the models......
+Loss: 1.6968, Prec@1: 63.98, Prec@5: 86.92
+Epoch time: 80s
+Saving models
+Epoch: 81  lr: 0.100
+Epoch: [81][000/391]	Time 1.1400 Data 0.9176 Loss 0.2133 (0.2133)	Acc@1 93.750 (93.750)	Acc@5 100.000 (100.000)
+Epoch: [81][100/391]	Time 0.1867 Data 0.0020 Loss 0.3263 (0.2571)	Acc@1 90.625 (91.955)	Acc@5 99.219 (99.598)
+Epoch: [81][200/391]	Time 0.1870 Data 0.0025 Loss 0.2924 (0.2713)	Acc@1 91.406 (91.535)	Acc@5 100.000 (99.572)
+Epoch: [81][300/391]	Time 0.1891 Data 0.0019 Loss 0.3420 (0.2893)	Acc@1 88.281 (90.890)	Acc@5 100.000 (99.512)
+Testing the models......
+Loss: 1.7158, Prec@1: 63.27, Prec@5: 86.64
+Epoch time: 80s
+Epoch: 82  lr: 0.100
+Epoch: [82][000/391]	Time 1.1669 Data 0.9702 Loss 0.3080 (0.3080)	Acc@1 92.188 (92.188)	Acc@5 100.000 (100.000)
+Epoch: [82][100/391]	Time 0.1856 Data 0.0019 Loss 0.3786 (0.2897)	Acc@1 88.281 (90.857)	Acc@5 98.438 (99.559)
+Epoch: [82][200/391]	Time 0.1862 Data 0.0019 Loss 0.3075 (0.2929)	Acc@1 87.500 (90.850)	Acc@5 100.000 (99.537)
+Epoch: [82][300/391]	Time 0.1892 Data 0.0024 Loss 0.4025 (0.3071)	Acc@1 87.500 (90.355)	Acc@5 98.438 (99.471)
+Testing the models......
+Loss: 1.8289, Prec@1: 62.39, Prec@5: 85.93
+Epoch time: 80s
+Epoch: 83  lr: 0.100
+Epoch: [83][000/391]	Time 1.1789 Data 1.0100 Loss 0.2604 (0.2604)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [83][100/391]	Time 0.1877 Data 0.0020 Loss 0.3007 (0.2958)	Acc@1 88.281 (90.764)	Acc@5 100.000 (99.505)
+Epoch: [83][200/391]	Time 0.1865 Data 0.0019 Loss 0.2950 (0.2891)	Acc@1 92.188 (90.917)	Acc@5 100.000 (99.576)
+Epoch: [83][300/391]	Time 0.1862 Data 0.0019 Loss 0.3653 (0.3066)	Acc@1 89.062 (90.358)	Acc@5 99.219 (99.494)
+Testing the models......
+Loss: 1.7309, Prec@1: 63.11, Prec@5: 86.25
+Epoch time: 80s
+Epoch: 84  lr: 0.100
+Epoch: [84][000/391]	Time 1.0979 Data 0.8746 Loss 0.2531 (0.2531)	Acc@1 94.531 (94.531)	Acc@5 98.438 (98.438)
+Epoch: [84][100/391]	Time 0.1857 Data 0.0019 Loss 0.3384 (0.2747)	Acc@1 89.062 (91.700)	Acc@5 100.000 (99.613)
+Epoch: [84][200/391]	Time 0.1881 Data 0.0019 Loss 0.4946 (0.2780)	Acc@1 82.031 (91.426)	Acc@5 97.656 (99.584)
+Epoch: [84][300/391]	Time 0.1875 Data 0.0020 Loss 0.3744 (0.2911)	Acc@1 86.719 (90.923)	Acc@5 100.000 (99.554)
+Testing the models......
+Loss: 1.7939, Prec@1: 62.20, Prec@5: 86.35
+Epoch time: 80s
+Epoch: 85  lr: 0.100
+Epoch: [85][000/391]	Time 1.1760 Data 0.9474 Loss 0.2216 (0.2216)	Acc@1 92.188 (92.188)	Acc@5 100.000 (100.000)
+Epoch: [85][100/391]	Time 0.1866 Data 0.0020 Loss 0.1692 (0.2686)	Acc@1 94.531 (91.638)	Acc@5 100.000 (99.567)
+Epoch: [85][200/391]	Time 0.1913 Data 0.0020 Loss 0.1724 (0.2797)	Acc@1 94.531 (91.391)	Acc@5 100.000 (99.553)
+Epoch: [85][300/391]	Time 0.1860 Data 0.0020 Loss 0.2496 (0.2905)	Acc@1 91.406 (91.066)	Acc@5 100.000 (99.520)
+Testing the models......
+Loss: 1.7853, Prec@1: 61.80, Prec@5: 85.46
+Epoch time: 80s
+Epoch: 86  lr: 0.100
+Epoch: [86][000/391]	Time 1.1240 Data 0.9164 Loss 0.1228 (0.1228)	Acc@1 98.438 (98.438)	Acc@5 100.000 (100.000)
+Epoch: [86][100/391]	Time 0.1863 Data 0.0019 Loss 0.2309 (0.2652)	Acc@1 92.969 (91.816)	Acc@5 100.000 (99.598)
+Epoch: [86][200/391]	Time 0.1858 Data 0.0022 Loss 0.5977 (0.2678)	Acc@1 84.375 (91.799)	Acc@5 99.219 (99.604)
+Epoch: [86][300/391]	Time 0.1858 Data 0.0019 Loss 0.3779 (0.2866)	Acc@1 90.625 (91.219)	Acc@5 99.219 (99.535)
+Testing the models......
+Loss: 1.7888, Prec@1: 62.19, Prec@5: 86.16
+Epoch time: 80s
+Epoch: 87  lr: 0.100
+Epoch: [87][000/391]	Time 1.1196 Data 0.9137 Loss 0.3399 (0.3399)	Acc@1 91.406 (91.406)	Acc@5 100.000 (100.000)
+Epoch: [87][100/391]	Time 0.1858 Data 0.0019 Loss 0.2324 (0.2736)	Acc@1 92.969 (91.592)	Acc@5 100.000 (99.513)
+Epoch: [87][200/391]	Time 0.1859 Data 0.0022 Loss 0.3639 (0.2625)	Acc@1 87.500 (91.826)	Acc@5 98.438 (99.576)
+Epoch: [87][300/391]	Time 0.1852 Data 0.0019 Loss 0.4114 (0.2810)	Acc@1 86.719 (91.263)	Acc@5 99.219 (99.525)
+Testing the models......
+Loss: 1.7678, Prec@1: 62.85, Prec@5: 86.30
+Epoch time: 80s
+Epoch: 88  lr: 0.100
+Epoch: [88][000/391]	Time 1.0927 Data 0.8724 Loss 0.2597 (0.2597)	Acc@1 92.188 (92.188)	Acc@5 100.000 (100.000)
+Epoch: [88][100/391]	Time 0.1852 Data 0.0020 Loss 0.3692 (0.2722)	Acc@1 86.719 (91.692)	Acc@5 99.219 (99.629)
+Epoch: [88][200/391]	Time 0.1871 Data 0.0020 Loss 0.2191 (0.2814)	Acc@1 92.969 (91.344)	Acc@5 100.000 (99.545)
+Epoch: [88][300/391]	Time 0.1848 Data 0.0019 Loss 0.3412 (0.2902)	Acc@1 89.062 (91.030)	Acc@5 99.219 (99.520)
+Testing the models......
+Loss: 1.7400, Prec@1: 62.92, Prec@5: 86.60
+Epoch time: 80s
+Epoch: 89  lr: 0.100
+Epoch: [89][000/391]	Time 1.1585 Data 0.9274 Loss 0.2542 (0.2542)	Acc@1 91.406 (91.406)	Acc@5 100.000 (100.000)
+Epoch: [89][100/391]	Time 0.1846 Data 0.0019 Loss 0.2609 (0.2536)	Acc@1 91.406 (92.048)	Acc@5 100.000 (99.714)
+Epoch: [89][200/391]	Time 0.1866 Data 0.0022 Loss 0.3611 (0.2682)	Acc@1 87.500 (91.659)	Acc@5 99.219 (99.611)
+Epoch: [89][300/391]	Time 0.1859 Data 0.0019 Loss 0.3294 (0.2795)	Acc@1 89.062 (91.323)	Acc@5 99.219 (99.559)
+Testing the models......
+Loss: 1.7284, Prec@1: 63.26, Prec@5: 86.16
+Epoch time: 80s
+Epoch: 90  lr: 0.100
+Epoch: [90][000/391]	Time 1.1520 Data 0.9988 Loss 0.3434 (0.3434)	Acc@1 89.844 (89.844)	Acc@5 99.219 (99.219)
+Epoch: [90][100/391]	Time 0.1858 Data 0.0019 Loss 0.3483 (0.2706)	Acc@1 89.844 (91.545)	Acc@5 99.219 (99.528)
+Epoch: [90][200/391]	Time 0.1863 Data 0.0023 Loss 0.2279 (0.2738)	Acc@1 93.750 (91.523)	Acc@5 100.000 (99.569)
+Epoch: [90][300/391]	Time 0.1852 Data 0.0019 Loss 0.2585 (0.2865)	Acc@1 91.406 (91.123)	Acc@5 99.219 (99.507)
+Testing the models......
+Loss: 1.6613, Prec@1: 63.81, Prec@5: 87.23
+Epoch time: 80s
+Epoch: 91  lr: 0.100
+Epoch: [91][000/391]	Time 1.1796 Data 0.9561 Loss 0.2025 (0.2025)	Acc@1 93.750 (93.750)	Acc@5 100.000 (100.000)
+Epoch: [91][100/391]	Time 0.1858 Data 0.0020 Loss 0.1435 (0.2643)	Acc@1 93.750 (91.886)	Acc@5 100.000 (99.598)
+Epoch: [91][200/391]	Time 0.1860 Data 0.0018 Loss 0.3735 (0.2724)	Acc@1 88.281 (91.558)	Acc@5 99.219 (99.557)
+Epoch: [91][300/391]	Time 0.1876 Data 0.0020 Loss 0.3404 (0.2883)	Acc@1 89.062 (91.017)	Acc@5 100.000 (99.515)
+Testing the models......
+Loss: 1.7263, Prec@1: 63.06, Prec@5: 87.02
+Epoch time: 80s
+Epoch: 92  lr: 0.100
+Epoch: [92][000/391]	Time 1.1598 Data 0.9573 Loss 0.2072 (0.2072)	Acc@1 91.406 (91.406)	Acc@5 100.000 (100.000)
+Epoch: [92][100/391]	Time 0.1878 Data 0.0020 Loss 0.2397 (0.2598)	Acc@1 92.969 (92.041)	Acc@5 100.000 (99.652)
+Epoch: [92][200/391]	Time 0.1863 Data 0.0019 Loss 0.2158 (0.2703)	Acc@1 92.969 (91.678)	Acc@5 100.000 (99.607)
+Epoch: [92][300/391]	Time 0.1851 Data 0.0019 Loss 0.2333 (0.2836)	Acc@1 93.750 (91.183)	Acc@5 99.219 (99.561)
+Testing the models......
+Loss: 1.7431, Prec@1: 62.65, Prec@5: 86.68
+Epoch time: 80s
+Epoch: 93  lr: 0.100
+Epoch: [93][000/391]	Time 1.1051 Data 0.9085 Loss 0.2689 (0.2689)	Acc@1 92.188 (92.188)	Acc@5 99.219 (99.219)
+Epoch: [93][100/391]	Time 0.1883 Data 0.0020 Loss 0.2036 (0.2607)	Acc@1 95.312 (92.002)	Acc@5 99.219 (99.575)
+Epoch: [93][200/391]	Time 0.1859 Data 0.0019 Loss 0.2421 (0.2675)	Acc@1 92.969 (91.842)	Acc@5 100.000 (99.569)
+Epoch: [93][300/391]	Time 0.1882 Data 0.0021 Loss 0.3111 (0.2786)	Acc@1 90.625 (91.518)	Acc@5 100.000 (99.556)
+Testing the models......
+Loss: 1.7069, Prec@1: 63.29, Prec@5: 86.61
+Epoch time: 80s
+Epoch: 94  lr: 0.100
+Epoch: [94][000/391]	Time 1.0829 Data 0.8956 Loss 0.3680 (0.3680)	Acc@1 89.844 (89.844)	Acc@5 98.438 (98.438)
+Epoch: [94][100/391]	Time 0.1878 Data 0.0019 Loss 0.2568 (0.2687)	Acc@1 92.969 (91.708)	Acc@5 99.219 (99.598)
+Epoch: [94][200/391]	Time 0.1858 Data 0.0020 Loss 0.2617 (0.2721)	Acc@1 93.750 (91.476)	Acc@5 100.000 (99.541)
+Epoch: [94][300/391]	Time 0.1873 Data 0.0020 Loss 0.2397 (0.2870)	Acc@1 92.188 (90.918)	Acc@5 100.000 (99.530)
+Testing the models......
+Loss: 1.8440, Prec@1: 61.61, Prec@5: 85.50
+Epoch time: 80s
+Epoch: 95  lr: 0.100
+Epoch: [95][000/391]	Time 1.1424 Data 0.9096 Loss 0.2588 (0.2588)	Acc@1 92.188 (92.188)	Acc@5 99.219 (99.219)
+Epoch: [95][100/391]	Time 0.1861 Data 0.0019 Loss 0.2117 (0.2505)	Acc@1 92.969 (92.327)	Acc@5 99.219 (99.606)
+Epoch: [95][200/391]	Time 0.1855 Data 0.0019 Loss 0.1971 (0.2542)	Acc@1 93.750 (92.176)	Acc@5 100.000 (99.635)
+Epoch: [95][300/391]	Time 0.1868 Data 0.0020 Loss 0.2488 (0.2666)	Acc@1 94.531 (91.687)	Acc@5 99.219 (99.613)
+Testing the models......
+Loss: 1.7014, Prec@1: 63.85, Prec@5: 86.44
+Epoch time: 80s
+Epoch: 96  lr: 0.100
+Epoch: [96][000/391]	Time 1.1751 Data 0.9714 Loss 0.3132 (0.3132)	Acc@1 89.844 (89.844)	Acc@5 100.000 (100.000)
+Epoch: [96][100/391]	Time 0.1859 Data 0.0019 Loss 0.2860 (0.2636)	Acc@1 92.969 (91.731)	Acc@5 100.000 (99.613)
+Epoch: [96][200/391]	Time 0.1880 Data 0.0019 Loss 0.2120 (0.2611)	Acc@1 95.312 (91.884)	Acc@5 99.219 (99.631)
+Epoch: [96][300/391]	Time 0.1857 Data 0.0020 Loss 0.2369 (0.2812)	Acc@1 92.969 (91.266)	Acc@5 100.000 (99.541)
+Testing the models......
+Loss: 1.7995, Prec@1: 62.56, Prec@5: 86.24
+Epoch time: 80s
+Epoch: 97  lr: 0.100
+Epoch: [97][000/391]	Time 1.1188 Data 0.9297 Loss 0.1641 (0.1641)	Acc@1 96.875 (96.875)	Acc@5 100.000 (100.000)
+Epoch: [97][100/391]	Time 0.1860 Data 0.0020 Loss 0.2168 (0.2578)	Acc@1 96.094 (91.925)	Acc@5 100.000 (99.621)
+Epoch: [97][200/391]	Time 0.1861 Data 0.0019 Loss 0.3616 (0.2584)	Acc@1 89.844 (91.993)	Acc@5 100.000 (99.650)
+Epoch: [97][300/391]	Time 0.1860 Data 0.0020 Loss 0.2964 (0.2702)	Acc@1 89.844 (91.648)	Acc@5 99.219 (99.590)
+Testing the models......
+Loss: 1.8691, Prec@1: 62.10, Prec@5: 84.99
+Epoch time: 80s
+Epoch: 98  lr: 0.100
+Epoch: [98][000/391]	Time 1.0790 Data 0.8779 Loss 0.3257 (0.3257)	Acc@1 90.625 (90.625)	Acc@5 100.000 (100.000)
+Epoch: [98][100/391]	Time 0.1859 Data 0.0020 Loss 0.2906 (0.2856)	Acc@1 92.188 (91.066)	Acc@5 99.219 (99.544)
+Epoch: [98][200/391]	Time 0.1879 Data 0.0018 Loss 0.2409 (0.2933)	Acc@1 94.531 (90.870)	Acc@5 100.000 (99.522)
+Epoch: [98][300/391]	Time 0.1861 Data 0.0019 Loss 0.3240 (0.2966)	Acc@1 89.844 (90.801)	Acc@5 99.219 (99.496)
+Testing the models......
+Loss: 1.7364, Prec@1: 63.46, Prec@5: 86.34
+Epoch time: 80s
+Epoch: 99  lr: 0.100
+Epoch: [99][000/391]	Time 1.1052 Data 0.9008 Loss 0.2530 (0.2530)	Acc@1 93.750 (93.750)	Acc@5 100.000 (100.000)
+Epoch: [99][100/391]	Time 0.1863 Data 0.0019 Loss 0.2539 (0.2664)	Acc@1 93.750 (91.878)	Acc@5 100.000 (99.621)
+Epoch: [99][200/391]	Time 0.1872 Data 0.0026 Loss 0.3500 (0.2727)	Acc@1 88.281 (91.643)	Acc@5 99.219 (99.600)
+Epoch: [99][300/391]	Time 0.1860 Data 0.0019 Loss 0.2814 (0.2901)	Acc@1 88.281 (91.095)	Acc@5 100.000 (99.489)
+Testing the models......
+Loss: 1.7224, Prec@1: 63.42, Prec@5: 86.04
+Epoch time: 80s
+Epoch: 100  lr: 0.010
+Epoch: [100][000/391]	Time 1.1229 Data 0.9235 Loss 0.2277 (0.2277)	Acc@1 92.969 (92.969)	Acc@5 100.000 (100.000)
+Epoch: [100][100/391]	Time 0.1866 Data 0.0026 Loss 0.0985 (0.1590)	Acc@1 99.219 (95.336)	Acc@5 100.000 (99.845)
+Epoch: [100][200/391]	Time 0.1873 Data 0.0028 Loss 0.0475 (0.1281)	Acc@1 99.219 (96.506)	Acc@5 100.000 (99.918)
+Epoch: [100][300/391]	Time 0.1857 Data 0.0019 Loss 0.0583 (0.1134)	Acc@1 100.000 (97.085)	Acc@5 100.000 (99.938)
+Testing the models......
+Loss: 1.1880, Prec@1: 71.84, Prec@5: 91.21
+Epoch time: 80s
+Saving models
+Epoch: 101  lr: 0.010
+Epoch: [101][000/391]	Time 1.1926 Data 0.9552 Loss 0.0208 (0.0208)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [101][100/391]	Time 0.1859 Data 0.0019 Loss 0.0696 (0.0581)	Acc@1 99.219 (99.064)	Acc@5 100.000 (99.992)
+Epoch: [101][200/391]	Time 0.1857 Data 0.0019 Loss 0.1146 (0.0566)	Acc@1 97.656 (99.079)	Acc@5 100.000 (99.996)
+Epoch: [101][300/391]	Time 0.1859 Data 0.0019 Loss 0.0568 (0.0575)	Acc@1 98.438 (99.042)	Acc@5 99.219 (99.995)
+Testing the models......
+Loss: 1.1578, Prec@1: 72.22, Prec@5: 91.55
+Epoch time: 80s
+Saving models
+Epoch: 102  lr: 0.010
+Epoch: [102][000/391]	Time 1.1753 Data 0.9130 Loss 0.0431 (0.0431)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [102][100/391]	Time 0.1864 Data 0.0019 Loss 0.0575 (0.0508)	Acc@1 99.219 (99.319)	Acc@5 100.000 (100.000)
+Epoch: [102][200/391]	Time 0.1929 Data 0.0019 Loss 0.0324 (0.0487)	Acc@1 99.219 (99.366)	Acc@5 100.000 (100.000)
+Epoch: [102][300/391]	Time 0.1863 Data 0.0019 Loss 0.0249 (0.0479)	Acc@1 100.000 (99.403)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1433, Prec@1: 72.35, Prec@5: 91.47
+Epoch time: 80s
+Saving models
+Epoch: 103  lr: 0.010
+Epoch: [103][000/391]	Time 1.1184 Data 0.9128 Loss 0.0497 (0.0497)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [103][100/391]	Time 0.1863 Data 0.0018 Loss 0.0278 (0.0440)	Acc@1 100.000 (99.474)	Acc@5 100.000 (99.992)
+Epoch: [103][200/391]	Time 0.1867 Data 0.0021 Loss 0.0341 (0.0423)	Acc@1 100.000 (99.561)	Acc@5 100.000 (99.996)
+Epoch: [103][300/391]	Time 0.1866 Data 0.0022 Loss 0.0445 (0.0417)	Acc@1 99.219 (99.577)	Acc@5 100.000 (99.997)
+Testing the models......
+Loss: 1.1322, Prec@1: 72.31, Prec@5: 91.39
+Epoch time: 80s
+Epoch: 104  lr: 0.010
+Epoch: [104][000/391]	Time 1.1399 Data 0.8897 Loss 0.0282 (0.0282)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [104][100/391]	Time 0.1868 Data 0.0018 Loss 0.0616 (0.0371)	Acc@1 100.000 (99.683)	Acc@5 100.000 (100.000)
+Epoch: [104][200/391]	Time 0.1863 Data 0.0019 Loss 0.0361 (0.0379)	Acc@1 100.000 (99.701)	Acc@5 100.000 (100.000)
+Epoch: [104][300/391]	Time 0.1861 Data 0.0020 Loss 0.0335 (0.0381)	Acc@1 100.000 (99.683)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1197, Prec@1: 72.43, Prec@5: 91.61
+Epoch time: 80s
+Saving models
+Epoch: 105  lr: 0.010
+Epoch: [105][000/391]	Time 1.1686 Data 0.9494 Loss 0.0433 (0.0433)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [105][100/391]	Time 0.1889 Data 0.0020 Loss 0.0281 (0.0340)	Acc@1 100.000 (99.791)	Acc@5 100.000 (100.000)
+Epoch: [105][200/391]	Time 0.1862 Data 0.0020 Loss 0.0302 (0.0352)	Acc@1 100.000 (99.732)	Acc@5 100.000 (100.000)
+Epoch: [105][300/391]	Time 0.1935 Data 0.0019 Loss 0.0334 (0.0353)	Acc@1 100.000 (99.753)	Acc@5 100.000 (99.997)
+Testing the models......
+Loss: 1.1195, Prec@1: 72.51, Prec@5: 91.60
+Epoch time: 80s
+Saving models
+Epoch: 106  lr: 0.010
+Epoch: [106][000/391]	Time 1.1726 Data 0.8964 Loss 0.0363 (0.0363)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [106][100/391]	Time 0.1880 Data 0.0019 Loss 0.0239 (0.0328)	Acc@1 100.000 (99.714)	Acc@5 100.000 (100.000)
+Epoch: [106][200/391]	Time 0.1861 Data 0.0021 Loss 0.0355 (0.0326)	Acc@1 99.219 (99.751)	Acc@5 100.000 (100.000)
+Epoch: [106][300/391]	Time 0.1860 Data 0.0019 Loss 0.0255 (0.0330)	Acc@1 100.000 (99.761)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1100, Prec@1: 72.69, Prec@5: 91.54
+Epoch time: 80s
+Saving models
+Epoch: 107  lr: 0.010
+Epoch: [107][000/391]	Time 1.2286 Data 0.9560 Loss 0.0343 (0.0343)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [107][100/391]	Time 0.1866 Data 0.0019 Loss 0.0445 (0.0310)	Acc@1 100.000 (99.822)	Acc@5 100.000 (100.000)
+Epoch: [107][200/391]	Time 0.1860 Data 0.0019 Loss 0.0203 (0.0308)	Acc@1 100.000 (99.837)	Acc@5 100.000 (100.000)
+Epoch: [107][300/391]	Time 0.1863 Data 0.0019 Loss 0.0327 (0.0313)	Acc@1 100.000 (99.818)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1077, Prec@1: 72.65, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 108  lr: 0.010
+Epoch: [108][000/391]	Time 1.1428 Data 0.9433 Loss 0.0326 (0.0326)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [108][100/391]	Time 0.1865 Data 0.0031 Loss 0.0293 (0.0300)	Acc@1 100.000 (99.814)	Acc@5 100.000 (100.000)
+Epoch: [108][200/391]	Time 0.1860 Data 0.0019 Loss 0.0236 (0.0301)	Acc@1 100.000 (99.848)	Acc@5 100.000 (100.000)
+Epoch: [108][300/391]	Time 0.1865 Data 0.0019 Loss 0.0243 (0.0304)	Acc@1 100.000 (99.839)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1021, Prec@1: 72.95, Prec@5: 91.53
+Epoch time: 80s
+Saving models
+Epoch: 109  lr: 0.010
+Epoch: [109][000/391]	Time 1.1280 Data 0.9428 Loss 0.0167 (0.0167)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [109][100/391]	Time 0.1858 Data 0.0019 Loss 0.0240 (0.0289)	Acc@1 100.000 (99.868)	Acc@5 100.000 (100.000)
+Epoch: [109][200/391]	Time 0.1880 Data 0.0019 Loss 0.0213 (0.0292)	Acc@1 100.000 (99.883)	Acc@5 100.000 (100.000)
+Epoch: [109][300/391]	Time 0.1874 Data 0.0022 Loss 0.0517 (0.0294)	Acc@1 99.219 (99.868)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.1012, Prec@1: 72.92, Prec@5: 91.57
+Epoch time: 80s
+Epoch: 110  lr: 0.010
+Epoch: [110][000/391]	Time 1.2087 Data 1.0512 Loss 0.0142 (0.0142)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [110][100/391]	Time 0.1864 Data 0.0019 Loss 0.0276 (0.0285)	Acc@1 100.000 (99.830)	Acc@5 100.000 (100.000)
+Epoch: [110][200/391]	Time 0.1857 Data 0.0019 Loss 0.0225 (0.0288)	Acc@1 100.000 (99.841)	Acc@5 100.000 (100.000)
+Epoch: [110][300/391]	Time 0.1870 Data 0.0020 Loss 0.0315 (0.0288)	Acc@1 100.000 (99.849)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0983, Prec@1: 72.89, Prec@5: 91.46
+Epoch time: 80s
+Epoch: 111  lr: 0.010
+Epoch: [111][000/391]	Time 1.1765 Data 0.9675 Loss 0.0323 (0.0323)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [111][100/391]	Time 0.1917 Data 0.0023 Loss 0.0212 (0.0272)	Acc@1 100.000 (99.923)	Acc@5 100.000 (100.000)
+Epoch: [111][200/391]	Time 0.1860 Data 0.0019 Loss 0.0553 (0.0277)	Acc@1 98.438 (99.880)	Acc@5 100.000 (100.000)
+Epoch: [111][300/391]	Time 0.1858 Data 0.0019 Loss 0.0210 (0.0276)	Acc@1 100.000 (99.883)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0957, Prec@1: 73.01, Prec@5: 91.43
+Epoch time: 80s
+Saving models
+Epoch: 112  lr: 0.010
+Epoch: [112][000/391]	Time 1.1512 Data 0.9132 Loss 0.0229 (0.0229)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [112][100/391]	Time 0.1910 Data 0.0025 Loss 0.0263 (0.0278)	Acc@1 100.000 (99.830)	Acc@5 100.000 (100.000)
+Epoch: [112][200/391]	Time 0.1863 Data 0.0021 Loss 0.0321 (0.0275)	Acc@1 100.000 (99.860)	Acc@5 100.000 (100.000)
+Epoch: [112][300/391]	Time 0.1870 Data 0.0020 Loss 0.0201 (0.0270)	Acc@1 100.000 (99.881)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0905, Prec@1: 73.00, Prec@5: 91.60
+Epoch time: 80s
+Epoch: 113  lr: 0.010
+Epoch: [113][000/391]	Time 1.0753 Data 0.8679 Loss 0.0203 (0.0203)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [113][100/391]	Time 0.1863 Data 0.0019 Loss 0.0308 (0.0265)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [113][200/391]	Time 0.1866 Data 0.0021 Loss 0.0209 (0.0263)	Acc@1 100.000 (99.914)	Acc@5 100.000 (100.000)
+Epoch: [113][300/391]	Time 0.1870 Data 0.0022 Loss 0.0262 (0.0262)	Acc@1 100.000 (99.912)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0887, Prec@1: 73.00, Prec@5: 91.60
+Epoch time: 80s
+Epoch: 114  lr: 0.010
+Epoch: [114][000/391]	Time 1.2310 Data 1.0164 Loss 0.0471 (0.0471)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [114][100/391]	Time 0.1864 Data 0.0020 Loss 0.0304 (0.0256)	Acc@1 100.000 (99.907)	Acc@5 100.000 (100.000)
+Epoch: [114][200/391]	Time 0.1863 Data 0.0019 Loss 0.0281 (0.0255)	Acc@1 99.219 (99.914)	Acc@5 100.000 (100.000)
+Epoch: [114][300/391]	Time 0.1872 Data 0.0020 Loss 0.0228 (0.0253)	Acc@1 100.000 (99.920)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0910, Prec@1: 72.94, Prec@5: 91.49
+Epoch time: 80s
+Epoch: 115  lr: 0.010
+Epoch: [115][000/391]	Time 1.1887 Data 0.9936 Loss 0.0202 (0.0202)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [115][100/391]	Time 0.1871 Data 0.0019 Loss 0.0256 (0.0260)	Acc@1 100.000 (99.899)	Acc@5 100.000 (100.000)
+Epoch: [115][200/391]	Time 0.1869 Data 0.0019 Loss 0.0264 (0.0257)	Acc@1 100.000 (99.911)	Acc@5 100.000 (100.000)
+Epoch: [115][300/391]	Time 0.1863 Data 0.0020 Loss 0.0202 (0.0252)	Acc@1 100.000 (99.912)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0914, Prec@1: 73.22, Prec@5: 91.52
+Epoch time: 80s
+Saving models
+Epoch: 116  lr: 0.010
+Epoch: [116][000/391]	Time 1.4323 Data 1.2375 Loss 0.0334 (0.0334)	Acc@1 98.438 (98.438)	Acc@5 100.000 (100.000)
+Epoch: [116][100/391]	Time 0.1896 Data 0.0022 Loss 0.0221 (0.0244)	Acc@1 100.000 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [116][200/391]	Time 0.1878 Data 0.0021 Loss 0.0353 (0.0247)	Acc@1 100.000 (99.922)	Acc@5 100.000 (100.000)
+Epoch: [116][300/391]	Time 0.1889 Data 0.0023 Loss 0.0343 (0.0246)	Acc@1 100.000 (99.920)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0891, Prec@1: 73.04, Prec@5: 91.60
+Epoch time: 81s
+Epoch: 117  lr: 0.010
+Epoch: [117][000/391]	Time 1.1576 Data 0.9641 Loss 0.0294 (0.0294)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [117][100/391]	Time 0.1867 Data 0.0022 Loss 0.0351 (0.0241)	Acc@1 99.219 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [117][200/391]	Time 0.1910 Data 0.0021 Loss 0.0205 (0.0239)	Acc@1 100.000 (99.942)	Acc@5 100.000 (100.000)
+Epoch: [117][300/391]	Time 0.1868 Data 0.0022 Loss 0.0184 (0.0238)	Acc@1 100.000 (99.940)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0840, Prec@1: 73.03, Prec@5: 91.49
+Epoch time: 80s
+Epoch: 118  lr: 0.010
+Epoch: [118][000/391]	Time 1.4664 Data 1.2574 Loss 0.0216 (0.0216)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [118][100/391]	Time 0.1891 Data 0.0020 Loss 0.0230 (0.0241)	Acc@1 100.000 (99.899)	Acc@5 100.000 (100.000)
+Epoch: [118][200/391]	Time 0.1852 Data 0.0020 Loss 0.0248 (0.0241)	Acc@1 100.000 (99.914)	Acc@5 100.000 (100.000)
+Epoch: [118][300/391]	Time 0.1852 Data 0.0020 Loss 0.0351 (0.0244)	Acc@1 99.219 (99.907)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0817, Prec@1: 73.24, Prec@5: 91.52
+Epoch time: 80s
+Saving models
+Epoch: 119  lr: 0.010
+Epoch: [119][000/391]	Time 1.5269 Data 1.3631 Loss 0.0250 (0.0250)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [119][100/391]	Time 0.1862 Data 0.0020 Loss 0.0275 (0.0231)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [119][200/391]	Time 0.1873 Data 0.0023 Loss 0.0155 (0.0229)	Acc@1 100.000 (99.942)	Acc@5 100.000 (100.000)
+Epoch: [119][300/391]	Time 0.1868 Data 0.0022 Loss 0.0308 (0.0233)	Acc@1 100.000 (99.933)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0833, Prec@1: 73.16, Prec@5: 91.47
+Epoch time: 81s
+Epoch: 120  lr: 0.010
+Epoch: [120][000/391]	Time 1.4483 Data 1.1893 Loss 0.0247 (0.0247)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [120][100/391]	Time 0.1852 Data 0.0019 Loss 0.0344 (0.0232)	Acc@1 100.000 (99.876)	Acc@5 100.000 (100.000)
+Epoch: [120][200/391]	Time 0.1851 Data 0.0020 Loss 0.0191 (0.0231)	Acc@1 100.000 (99.907)	Acc@5 100.000 (100.000)
+Epoch: [120][300/391]	Time 0.1853 Data 0.0021 Loss 0.0260 (0.0232)	Acc@1 100.000 (99.912)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0817, Prec@1: 73.13, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 121  lr: 0.010
+Epoch: [121][000/391]	Time 1.6042 Data 1.4739 Loss 0.0128 (0.0128)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [121][100/391]	Time 0.1856 Data 0.0020 Loss 0.0258 (0.0233)	Acc@1 100.000 (99.915)	Acc@5 100.000 (100.000)
+Epoch: [121][200/391]	Time 0.1876 Data 0.0023 Loss 0.0322 (0.0233)	Acc@1 99.219 (99.903)	Acc@5 100.000 (100.000)
+Epoch: [121][300/391]	Time 0.1861 Data 0.0021 Loss 0.0216 (0.0230)	Acc@1 100.000 (99.912)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0794, Prec@1: 73.35, Prec@5: 91.52
+Epoch time: 81s
+Saving models
+Epoch: 122  lr: 0.010
+Epoch: [122][000/391]	Time 1.4958 Data 1.2658 Loss 0.0156 (0.0156)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [122][100/391]	Time 0.1859 Data 0.0022 Loss 0.0296 (0.0229)	Acc@1 99.219 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [122][200/391]	Time 0.1857 Data 0.0020 Loss 0.0320 (0.0231)	Acc@1 100.000 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [122][300/391]	Time 0.1854 Data 0.0021 Loss 0.0144 (0.0226)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0778, Prec@1: 73.31, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 123  lr: 0.010
+Epoch: [123][000/391]	Time 1.4716 Data 1.3135 Loss 0.0194 (0.0194)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [123][100/391]	Time 0.1851 Data 0.0020 Loss 0.0185 (0.0216)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [123][200/391]	Time 0.1852 Data 0.0019 Loss 0.0176 (0.0218)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [123][300/391]	Time 0.1872 Data 0.0021 Loss 0.0249 (0.0218)	Acc@1 99.219 (99.948)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0770, Prec@1: 73.32, Prec@5: 91.40
+Epoch time: 80s
+Epoch: 124  lr: 0.010
+Epoch: [124][000/391]	Time 1.4511 Data 1.2621 Loss 0.0175 (0.0175)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [124][100/391]	Time 0.1919 Data 0.0021 Loss 0.0248 (0.0218)	Acc@1 100.000 (99.923)	Acc@5 100.000 (100.000)
+Epoch: [124][200/391]	Time 0.1861 Data 0.0020 Loss 0.0191 (0.0223)	Acc@1 100.000 (99.926)	Acc@5 100.000 (100.000)
+Epoch: [124][300/391]	Time 0.1896 Data 0.0021 Loss 0.0226 (0.0222)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0815, Prec@1: 73.14, Prec@5: 91.36
+Epoch time: 81s
+Epoch: 125  lr: 0.010
+Epoch: [125][000/391]	Time 1.4795 Data 1.2668 Loss 0.0255 (0.0255)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [125][100/391]	Time 0.1864 Data 0.0027 Loss 0.0166 (0.0214)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [125][200/391]	Time 0.1865 Data 0.0028 Loss 0.0221 (0.0214)	Acc@1 100.000 (99.942)	Acc@5 100.000 (100.000)
+Epoch: [125][300/391]	Time 0.1859 Data 0.0020 Loss 0.0315 (0.0216)	Acc@1 99.219 (99.940)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0795, Prec@1: 73.12, Prec@5: 91.44
+Epoch time: 81s
+Epoch: 126  lr: 0.010
+Epoch: [126][000/391]	Time 1.4925 Data 1.2995 Loss 0.0167 (0.0167)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [126][100/391]	Time 0.1860 Data 0.0020 Loss 0.0173 (0.0219)	Acc@1 100.000 (99.923)	Acc@5 100.000 (100.000)
+Epoch: [126][200/391]	Time 0.1858 Data 0.0020 Loss 0.0160 (0.0218)	Acc@1 100.000 (99.911)	Acc@5 100.000 (100.000)
+Epoch: [126][300/391]	Time 0.1868 Data 0.0019 Loss 0.0228 (0.0217)	Acc@1 100.000 (99.930)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0817, Prec@1: 73.14, Prec@5: 91.35
+Epoch time: 81s
+Epoch: 127  lr: 0.010
+Epoch: [127][000/391]	Time 1.4951 Data 1.3404 Loss 0.0214 (0.0214)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [127][100/391]	Time 0.1860 Data 0.0021 Loss 0.0291 (0.0214)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [127][200/391]	Time 0.1862 Data 0.0021 Loss 0.0154 (0.0216)	Acc@1 100.000 (99.918)	Acc@5 100.000 (100.000)
+Epoch: [127][300/391]	Time 0.1925 Data 0.0021 Loss 0.0163 (0.0214)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0781, Prec@1: 72.98, Prec@5: 91.42
+Epoch time: 81s
+Epoch: 128  lr: 0.010
+Epoch: [128][000/391]	Time 1.5423 Data 1.3229 Loss 0.0198 (0.0198)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [128][100/391]	Time 0.1877 Data 0.0027 Loss 0.0248 (0.0209)	Acc@1 99.219 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [128][200/391]	Time 0.1861 Data 0.0020 Loss 0.0161 (0.0208)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [128][300/391]	Time 0.1860 Data 0.0020 Loss 0.0202 (0.0210)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0794, Prec@1: 73.07, Prec@5: 91.27
+Epoch time: 81s
+Epoch: 129  lr: 0.010
+Epoch: [129][000/391]	Time 1.5172 Data 1.3591 Loss 0.0183 (0.0183)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [129][100/391]	Time 0.1872 Data 0.0030 Loss 0.0165 (0.0203)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [129][200/391]	Time 0.1862 Data 0.0020 Loss 0.0214 (0.0202)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [129][300/391]	Time 0.1857 Data 0.0030 Loss 0.0233 (0.0207)	Acc@1 100.000 (99.948)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0748, Prec@1: 73.31, Prec@5: 91.55
+Epoch time: 81s
+Epoch: 130  lr: 0.010
+Epoch: [130][000/391]	Time 1.4421 Data 1.2885 Loss 0.0246 (0.0246)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [130][100/391]	Time 0.1865 Data 0.0020 Loss 0.0291 (0.0209)	Acc@1 100.000 (99.923)	Acc@5 100.000 (100.000)
+Epoch: [130][200/391]	Time 0.1870 Data 0.0024 Loss 0.0219 (0.0210)	Acc@1 100.000 (99.926)	Acc@5 100.000 (100.000)
+Epoch: [130][300/391]	Time 0.1863 Data 0.0020 Loss 0.0195 (0.0210)	Acc@1 100.000 (99.922)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0731, Prec@1: 73.25, Prec@5: 91.39
+Epoch time: 81s
+Epoch: 131  lr: 0.010
+Epoch: [131][000/391]	Time 1.5070 Data 1.2431 Loss 0.0164 (0.0164)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [131][100/391]	Time 0.1860 Data 0.0019 Loss 0.0190 (0.0199)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [131][200/391]	Time 0.1862 Data 0.0019 Loss 0.0260 (0.0200)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [131][300/391]	Time 0.1864 Data 0.0021 Loss 0.0222 (0.0204)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0729, Prec@1: 73.28, Prec@5: 91.39
+Epoch time: 81s
+Epoch: 132  lr: 0.010
+Epoch: [132][000/391]	Time 1.5455 Data 1.3310 Loss 0.0191 (0.0191)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [132][100/391]	Time 0.1865 Data 0.0019 Loss 0.0212 (0.0202)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [132][200/391]	Time 0.1869 Data 0.0025 Loss 0.0230 (0.0203)	Acc@1 100.000 (99.949)	Acc@5 100.000 (100.000)
+Epoch: [132][300/391]	Time 0.1863 Data 0.0020 Loss 0.0156 (0.0205)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0717, Prec@1: 73.35, Prec@5: 91.41
+Epoch time: 81s
+Epoch: 133  lr: 0.010
+Epoch: [133][000/391]	Time 1.5053 Data 1.3265 Loss 0.0177 (0.0177)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [133][100/391]	Time 0.1872 Data 0.0022 Loss 0.0153 (0.0196)	Acc@1 100.000 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [133][200/391]	Time 0.1855 Data 0.0021 Loss 0.0265 (0.0202)	Acc@1 100.000 (99.926)	Acc@5 100.000 (100.000)
+Epoch: [133][300/391]	Time 0.1864 Data 0.0019 Loss 0.0218 (0.0202)	Acc@1 100.000 (99.927)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0708, Prec@1: 73.27, Prec@5: 91.45
+Epoch time: 81s
+Epoch: 134  lr: 0.010
+Epoch: [134][000/391]	Time 1.4145 Data 1.2628 Loss 0.0199 (0.0199)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [134][100/391]	Time 0.1864 Data 0.0019 Loss 0.0178 (0.0193)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [134][200/391]	Time 0.1881 Data 0.0027 Loss 0.0167 (0.0194)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [134][300/391]	Time 0.1860 Data 0.0020 Loss 0.0163 (0.0197)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0691, Prec@1: 73.38, Prec@5: 91.42
+Epoch time: 81s
+Saving models
+Epoch: 135  lr: 0.010
+Epoch: [135][000/391]	Time 1.6240 Data 1.3903 Loss 0.0168 (0.0168)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [135][100/391]	Time 0.1893 Data 0.0022 Loss 0.0151 (0.0194)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [135][200/391]	Time 0.1876 Data 0.0019 Loss 0.0210 (0.0193)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [135][300/391]	Time 0.1869 Data 0.0022 Loss 0.0161 (0.0196)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0678, Prec@1: 73.26, Prec@5: 91.48
+Epoch time: 81s
+Epoch: 136  lr: 0.010
+Epoch: [136][000/391]	Time 1.4376 Data 1.2546 Loss 0.0147 (0.0147)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [136][100/391]	Time 0.1858 Data 0.0019 Loss 0.0207 (0.0202)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [136][200/391]	Time 0.1865 Data 0.0020 Loss 0.0161 (0.0198)	Acc@1 100.000 (99.942)	Acc@5 100.000 (100.000)
+Epoch: [136][300/391]	Time 0.1859 Data 0.0019 Loss 0.0296 (0.0199)	Acc@1 99.219 (99.943)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0681, Prec@1: 73.27, Prec@5: 91.57
+Epoch time: 81s
+Epoch: 137  lr: 0.010
+Epoch: [137][000/391]	Time 1.4356 Data 1.2191 Loss 0.0179 (0.0179)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [137][100/391]	Time 0.1881 Data 0.0025 Loss 0.0183 (0.0190)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [137][200/391]	Time 0.1864 Data 0.0020 Loss 0.0118 (0.0194)	Acc@1 100.000 (99.949)	Acc@5 100.000 (100.000)
+Epoch: [137][300/391]	Time 0.1861 Data 0.0020 Loss 0.0287 (0.0197)	Acc@1 100.000 (99.945)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0685, Prec@1: 73.49, Prec@5: 91.38
+Epoch time: 81s
+Saving models
+Epoch: 138  lr: 0.010
+Epoch: [138][000/391]	Time 1.5488 Data 1.2776 Loss 0.0146 (0.0146)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [138][100/391]	Time 0.1863 Data 0.0020 Loss 0.0207 (0.0200)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [138][200/391]	Time 0.1855 Data 0.0019 Loss 0.0273 (0.0199)	Acc@1 100.000 (99.949)	Acc@5 100.000 (100.000)
+Epoch: [138][300/391]	Time 0.1866 Data 0.0021 Loss 0.0185 (0.0199)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0730, Prec@1: 73.21, Prec@5: 91.36
+Epoch time: 81s
+Epoch: 139  lr: 0.010
+Epoch: [139][000/391]	Time 1.4454 Data 1.2548 Loss 0.0207 (0.0207)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [139][100/391]	Time 0.1866 Data 0.0031 Loss 0.0184 (0.0184)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [139][200/391]	Time 0.1869 Data 0.0020 Loss 0.0260 (0.0190)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [139][300/391]	Time 0.1862 Data 0.0020 Loss 0.0178 (0.0190)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0728, Prec@1: 73.30, Prec@5: 91.38
+Epoch time: 81s
+Epoch: 140  lr: 0.010
+Epoch: [140][000/391]	Time 1.4321 Data 1.1796 Loss 0.0216 (0.0216)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [140][100/391]	Time 0.1858 Data 0.0020 Loss 0.0181 (0.0188)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [140][200/391]	Time 0.1859 Data 0.0019 Loss 0.0267 (0.0191)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [140][300/391]	Time 0.1869 Data 0.0024 Loss 0.0234 (0.0192)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0635, Prec@1: 73.46, Prec@5: 91.56
+Epoch time: 80s
+Epoch: 141  lr: 0.010
+Epoch: [141][000/391]	Time 1.3657 Data 1.1445 Loss 0.0140 (0.0140)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [141][100/391]	Time 0.1877 Data 0.0019 Loss 0.0155 (0.0180)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [141][200/391]	Time 0.1867 Data 0.0022 Loss 0.0171 (0.0185)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [141][300/391]	Time 0.1829 Data 0.0020 Loss 0.0196 (0.0189)	Acc@1 100.000 (99.945)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0666, Prec@1: 73.39, Prec@5: 91.46
+Epoch time: 81s
+Epoch: 142  lr: 0.010
+Epoch: [142][000/391]	Time 1.4830 Data 1.3270 Loss 0.0142 (0.0142)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [142][100/391]	Time 0.1856 Data 0.0019 Loss 0.0312 (0.0184)	Acc@1 99.219 (99.923)	Acc@5 100.000 (100.000)
+Epoch: [142][200/391]	Time 0.1857 Data 0.0021 Loss 0.0232 (0.0189)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [142][300/391]	Time 0.1871 Data 0.0027 Loss 0.0247 (0.0190)	Acc@1 99.219 (99.933)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0708, Prec@1: 73.36, Prec@5: 91.34
+Epoch time: 81s
+Epoch: 143  lr: 0.010
+Epoch: [143][000/391]	Time 1.4479 Data 1.2314 Loss 0.0117 (0.0117)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [143][100/391]	Time 0.1867 Data 0.0019 Loss 0.0160 (0.0185)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [143][200/391]	Time 0.1867 Data 0.0020 Loss 0.0161 (0.0191)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [143][300/391]	Time 0.1861 Data 0.0019 Loss 0.0195 (0.0192)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0658, Prec@1: 73.47, Prec@5: 91.39
+Epoch time: 81s
+Epoch: 144  lr: 0.010
+Epoch: [144][000/391]	Time 1.4082 Data 1.2402 Loss 0.0222 (0.0222)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [144][100/391]	Time 0.1864 Data 0.0020 Loss 0.0176 (0.0183)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [144][200/391]	Time 0.1861 Data 0.0019 Loss 0.0203 (0.0190)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [144][300/391]	Time 0.1862 Data 0.0020 Loss 0.0164 (0.0191)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0682, Prec@1: 73.53, Prec@5: 91.44
+Epoch time: 81s
+Saving models
+Epoch: 145  lr: 0.010
+Epoch: [145][000/391]	Time 1.4730 Data 1.2512 Loss 0.0163 (0.0163)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [145][100/391]	Time 0.1862 Data 0.0020 Loss 0.0237 (0.0190)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [145][200/391]	Time 0.1870 Data 0.0020 Loss 0.0186 (0.0187)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [145][300/391]	Time 0.1866 Data 0.0020 Loss 0.0185 (0.0188)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0664, Prec@1: 73.44, Prec@5: 91.51
+Epoch time: 81s
+Epoch: 146  lr: 0.010
+Epoch: [146][000/391]	Time 1.5139 Data 1.3536 Loss 0.0218 (0.0218)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [146][100/391]	Time 0.1866 Data 0.0019 Loss 0.0160 (0.0181)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [146][200/391]	Time 0.1865 Data 0.0020 Loss 0.0176 (0.0188)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [146][300/391]	Time 0.1894 Data 0.0019 Loss 0.0182 (0.0188)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0628, Prec@1: 73.33, Prec@5: 91.33
+Epoch time: 81s
+Epoch: 147  lr: 0.010
+Epoch: [147][000/391]	Time 1.4597 Data 1.3149 Loss 0.0207 (0.0207)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [147][100/391]	Time 0.1878 Data 0.0019 Loss 0.0167 (0.0185)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [147][200/391]	Time 0.1864 Data 0.0020 Loss 0.0207 (0.0185)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [147][300/391]	Time 0.1889 Data 0.0019 Loss 0.0302 (0.0186)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0642, Prec@1: 73.26, Prec@5: 91.50
+Epoch time: 81s
+Epoch: 148  lr: 0.010
+Epoch: [148][000/391]	Time 1.5252 Data 1.3150 Loss 0.0139 (0.0139)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [148][100/391]	Time 0.1866 Data 0.0021 Loss 0.0157 (0.0185)	Acc@1 100.000 (99.930)	Acc@5 100.000 (100.000)
+Epoch: [148][200/391]	Time 0.1862 Data 0.0019 Loss 0.0219 (0.0187)	Acc@1 100.000 (99.934)	Acc@5 100.000 (100.000)
+Epoch: [148][300/391]	Time 0.1865 Data 0.0021 Loss 0.0244 (0.0187)	Acc@1 100.000 (99.943)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0656, Prec@1: 73.39, Prec@5: 91.45
+Epoch time: 81s
+Epoch: 149  lr: 0.010
+Epoch: [149][000/391]	Time 1.4974 Data 1.2992 Loss 0.0176 (0.0176)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [149][100/391]	Time 0.1864 Data 0.0019 Loss 0.0154 (0.0182)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [149][200/391]	Time 0.1863 Data 0.0020 Loss 0.0139 (0.0182)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [149][300/391]	Time 0.1918 Data 0.0020 Loss 0.0185 (0.0182)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0628, Prec@1: 73.48, Prec@5: 91.56
+Epoch time: 81s
+Epoch: 150  lr: 0.001
+Epoch: [150][000/391]	Time 1.4735 Data 1.2781 Loss 0.0208 (0.0208)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [150][100/391]	Time 0.1910 Data 0.0019 Loss 0.0151 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [150][200/391]	Time 0.1858 Data 0.0021 Loss 0.0189 (0.0179)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [150][300/391]	Time 0.1864 Data 0.0019 Loss 0.0194 (0.0180)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0670, Prec@1: 73.32, Prec@5: 91.43
+Epoch time: 81s
+Epoch: 151  lr: 0.001
+Epoch: [151][000/391]	Time 1.4319 Data 1.2095 Loss 0.0192 (0.0192)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [151][100/391]	Time 0.1872 Data 0.0019 Loss 0.0208 (0.0184)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [151][200/391]	Time 0.1876 Data 0.0026 Loss 0.0172 (0.0181)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [151][300/391]	Time 0.1865 Data 0.0020 Loss 0.0176 (0.0181)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0647, Prec@1: 73.50, Prec@5: 91.49
+Epoch time: 81s
+Epoch: 152  lr: 0.001
+Epoch: [152][000/391]	Time 1.5303 Data 1.3299 Loss 0.0180 (0.0180)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [152][100/391]	Time 0.1861 Data 0.0020 Loss 0.0169 (0.0179)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [152][200/391]	Time 0.1870 Data 0.0020 Loss 0.0143 (0.0179)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [152][300/391]	Time 0.1863 Data 0.0019 Loss 0.0221 (0.0179)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0606, Prec@1: 73.65, Prec@5: 91.45
+Epoch time: 81s
+Saving models
+Epoch: 153  lr: 0.001
+Epoch: [153][000/391]	Time 1.4820 Data 1.3121 Loss 0.0194 (0.0194)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [153][100/391]	Time 0.1875 Data 0.0028 Loss 0.0146 (0.0184)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [153][200/391]	Time 0.1867 Data 0.0021 Loss 0.0153 (0.0183)	Acc@1 100.000 (99.949)	Acc@5 100.000 (100.000)
+Epoch: [153][300/391]	Time 0.1868 Data 0.0022 Loss 0.0284 (0.0180)	Acc@1 99.219 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.41, Prec@5: 91.42
+Epoch time: 81s
+Epoch: 154  lr: 0.001
+Epoch: [154][000/391]	Time 1.4796 Data 1.2952 Loss 0.0189 (0.0189)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [154][100/391]	Time 0.1866 Data 0.0019 Loss 0.0272 (0.0181)	Acc@1 99.219 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [154][200/391]	Time 0.1867 Data 0.0020 Loss 0.0148 (0.0178)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [154][300/391]	Time 0.1867 Data 0.0021 Loss 0.0139 (0.0177)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0644, Prec@1: 73.46, Prec@5: 91.45
+Epoch time: 81s
+Epoch: 155  lr: 0.001
+Epoch: [155][000/391]	Time 1.4589 Data 1.2669 Loss 0.0147 (0.0147)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [155][100/391]	Time 0.1861 Data 0.0020 Loss 0.0175 (0.0177)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [155][200/391]	Time 0.1874 Data 0.0030 Loss 0.0151 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [155][300/391]	Time 0.1866 Data 0.0019 Loss 0.0182 (0.0178)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0631, Prec@1: 73.52, Prec@5: 91.43
+Epoch time: 81s
+Epoch: 156  lr: 0.001
+Epoch: [156][000/391]	Time 1.4727 Data 1.2885 Loss 0.0221 (0.0221)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [156][100/391]	Time 0.1899 Data 0.0019 Loss 0.0112 (0.0180)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [156][200/391]	Time 0.1859 Data 0.0019 Loss 0.0187 (0.0179)	Acc@1 100.000 (99.949)	Acc@5 100.000 (100.000)
+Epoch: [156][300/391]	Time 0.1871 Data 0.0020 Loss 0.0147 (0.0181)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0650, Prec@1: 73.41, Prec@5: 91.36
+Epoch time: 81s
+Epoch: 157  lr: 0.001
+Epoch: [157][000/391]	Time 1.4820 Data 1.2608 Loss 0.0191 (0.0191)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [157][100/391]	Time 0.1870 Data 0.0020 Loss 0.0140 (0.0173)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [157][200/391]	Time 0.1863 Data 0.0020 Loss 0.0174 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [157][300/391]	Time 0.1870 Data 0.0021 Loss 0.0157 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0642, Prec@1: 73.41, Prec@5: 91.35
+Epoch time: 81s
+Epoch: 158  lr: 0.001
+Epoch: [158][000/391]	Time 1.2441 Data 1.0421 Loss 0.0147 (0.0147)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [158][100/391]	Time 0.1901 Data 0.0020 Loss 0.0194 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [158][200/391]	Time 0.1870 Data 0.0021 Loss 0.0180 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [158][300/391]	Time 0.1865 Data 0.0020 Loss 0.0165 (0.0177)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0628, Prec@1: 73.51, Prec@5: 91.40
+Epoch time: 80s
+Epoch: 159  lr: 0.001
+Epoch: [159][000/391]	Time 1.2116 Data 0.9977 Loss 0.0167 (0.0167)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [159][100/391]	Time 0.1873 Data 0.0021 Loss 0.0164 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [159][200/391]	Time 0.1877 Data 0.0021 Loss 0.0141 (0.0177)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [159][300/391]	Time 0.1886 Data 0.0027 Loss 0.0166 (0.0177)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0621, Prec@1: 73.55, Prec@5: 91.37
+Epoch time: 80s
+Epoch: 160  lr: 0.001
+Epoch: [160][000/391]	Time 1.1940 Data 0.9578 Loss 0.0133 (0.0133)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [160][100/391]	Time 0.1864 Data 0.0021 Loss 0.0159 (0.0185)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [160][200/391]	Time 0.1866 Data 0.0020 Loss 0.0164 (0.0183)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [160][300/391]	Time 0.1877 Data 0.0022 Loss 0.0149 (0.0181)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0636, Prec@1: 73.49, Prec@5: 91.36
+Epoch time: 81s
+Epoch: 161  lr: 0.001
+Epoch: [161][000/391]	Time 1.5252 Data 1.2678 Loss 0.0184 (0.0184)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [161][100/391]	Time 0.1866 Data 0.0019 Loss 0.0183 (0.0177)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [161][200/391]	Time 0.1869 Data 0.0021 Loss 0.0180 (0.0179)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [161][300/391]	Time 0.1872 Data 0.0030 Loss 0.0190 (0.0179)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0632, Prec@1: 73.42, Prec@5: 91.50
+Epoch time: 81s
+Epoch: 162  lr: 0.001
+Epoch: [162][000/391]	Time 1.4240 Data 1.2155 Loss 0.0131 (0.0131)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [162][100/391]	Time 0.1896 Data 0.0020 Loss 0.0116 (0.0178)	Acc@1 100.000 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [162][200/391]	Time 0.1882 Data 0.0020 Loss 0.0133 (0.0178)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [162][300/391]	Time 0.1870 Data 0.0020 Loss 0.0184 (0.0179)	Acc@1 100.000 (99.951)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0626, Prec@1: 73.41, Prec@5: 91.49
+Epoch time: 81s
+Epoch: 163  lr: 0.001
+Epoch: [163][000/391]	Time 1.5043 Data 1.2417 Loss 0.0168 (0.0168)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [163][100/391]	Time 0.1951 Data 0.0019 Loss 0.0145 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [163][200/391]	Time 0.1863 Data 0.0021 Loss 0.0176 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [163][300/391]	Time 0.1863 Data 0.0019 Loss 0.0282 (0.0175)	Acc@1 100.000 (99.979)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0633, Prec@1: 73.57, Prec@5: 91.55
+Epoch time: 81s
+Epoch: 164  lr: 0.001
+Epoch: [164][000/391]	Time 1.1461 Data 0.9381 Loss 0.0278 (0.0278)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [164][100/391]	Time 0.1869 Data 0.0022 Loss 0.0275 (0.0179)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [164][200/391]	Time 0.1864 Data 0.0024 Loss 0.0139 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [164][300/391]	Time 0.1876 Data 0.0024 Loss 0.0141 (0.0175)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.40, Prec@5: 91.45
+Epoch time: 80s
+Epoch: 165  lr: 0.001
+Epoch: [165][000/391]	Time 1.1602 Data 0.9424 Loss 0.0210 (0.0210)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [165][100/391]	Time 0.1859 Data 0.0021 Loss 0.0178 (0.0174)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [165][200/391]	Time 0.1869 Data 0.0019 Loss 0.0229 (0.0176)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [165][300/391]	Time 0.1857 Data 0.0020 Loss 0.0212 (0.0178)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0603, Prec@1: 73.52, Prec@5: 91.50
+Epoch time: 80s
+Epoch: 166  lr: 0.001
+Epoch: [166][000/391]	Time 1.1433 Data 0.8735 Loss 0.0174 (0.0174)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [166][100/391]	Time 0.1873 Data 0.0019 Loss 0.0150 (0.0173)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [166][200/391]	Time 0.1881 Data 0.0019 Loss 0.0164 (0.0176)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [166][300/391]	Time 0.1868 Data 0.0020 Loss 0.0180 (0.0177)	Acc@1 100.000 (99.979)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0640, Prec@1: 73.40, Prec@5: 91.50
+Epoch time: 80s
+Epoch: 167  lr: 0.001
+Epoch: [167][000/391]	Time 1.1658 Data 0.9827 Loss 0.0133 (0.0133)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [167][100/391]	Time 0.1869 Data 0.0020 Loss 0.0155 (0.0182)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [167][200/391]	Time 0.1879 Data 0.0019 Loss 0.0181 (0.0178)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [167][300/391]	Time 0.1886 Data 0.0019 Loss 0.0132 (0.0179)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0660, Prec@1: 73.22, Prec@5: 91.29
+Epoch time: 80s
+Epoch: 168  lr: 0.001
+Epoch: [168][000/391]	Time 1.1648 Data 0.9360 Loss 0.0173 (0.0173)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [168][100/391]	Time 0.1860 Data 0.0019 Loss 0.0172 (0.0182)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [168][200/391]	Time 0.1875 Data 0.0022 Loss 0.0156 (0.0175)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [168][300/391]	Time 0.1876 Data 0.0019 Loss 0.0190 (0.0175)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0615, Prec@1: 73.37, Prec@5: 91.53
+Epoch time: 80s
+Epoch: 169  lr: 0.001
+Epoch: [169][000/391]	Time 1.1715 Data 0.9585 Loss 0.0144 (0.0144)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [169][100/391]	Time 0.1862 Data 0.0019 Loss 0.0177 (0.0180)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [169][200/391]	Time 0.1857 Data 0.0020 Loss 0.0219 (0.0181)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [169][300/391]	Time 0.1886 Data 0.0022 Loss 0.0134 (0.0177)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0648, Prec@1: 73.48, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 170  lr: 0.001
+Epoch: [170][000/391]	Time 1.1681 Data 0.9491 Loss 0.0113 (0.0113)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [170][100/391]	Time 0.1861 Data 0.0019 Loss 0.0140 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [170][200/391]	Time 0.1857 Data 0.0019 Loss 0.0224 (0.0176)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [170][300/391]	Time 0.1868 Data 0.0020 Loss 0.0170 (0.0176)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0630, Prec@1: 73.37, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 171  lr: 0.001
+Epoch: [171][000/391]	Time 1.1388 Data 0.9423 Loss 0.0205 (0.0205)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [171][100/391]	Time 0.1874 Data 0.0020 Loss 0.0171 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [171][200/391]	Time 0.1857 Data 0.0020 Loss 0.0180 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [171][300/391]	Time 0.1860 Data 0.0020 Loss 0.0210 (0.0173)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0629, Prec@1: 73.61, Prec@5: 91.46
+Epoch time: 80s
+Epoch: 172  lr: 0.001
+Epoch: [172][000/391]	Time 1.1978 Data 1.0371 Loss 0.0196 (0.0196)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [172][100/391]	Time 0.1869 Data 0.0031 Loss 0.0157 (0.0180)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [172][200/391]	Time 0.1884 Data 0.0020 Loss 0.0189 (0.0178)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [172][300/391]	Time 0.1864 Data 0.0020 Loss 0.0144 (0.0177)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0617, Prec@1: 73.53, Prec@5: 91.43
+Epoch time: 80s
+Epoch: 173  lr: 0.001
+Epoch: [173][000/391]	Time 1.1326 Data 0.9063 Loss 0.0176 (0.0176)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [173][100/391]	Time 0.1855 Data 0.0020 Loss 0.0201 (0.0177)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [173][200/391]	Time 0.1865 Data 0.0020 Loss 0.0179 (0.0177)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [173][300/391]	Time 0.1862 Data 0.0019 Loss 0.0141 (0.0177)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0611, Prec@1: 73.54, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 174  lr: 0.001
+Epoch: [174][000/391]	Time 1.2161 Data 1.0541 Loss 0.0149 (0.0149)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [174][100/391]	Time 0.1878 Data 0.0021 Loss 0.0203 (0.0177)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [174][200/391]	Time 0.1872 Data 0.0021 Loss 0.0165 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [174][300/391]	Time 0.1863 Data 0.0020 Loss 0.0169 (0.0177)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0611, Prec@1: 73.53, Prec@5: 91.41
+Epoch time: 80s
+Epoch: 175  lr: 0.001
+Epoch: [175][000/391]	Time 1.1680 Data 0.9431 Loss 0.0161 (0.0161)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [175][100/391]	Time 0.1858 Data 0.0021 Loss 0.0158 (0.0171)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [175][200/391]	Time 0.1895 Data 0.0021 Loss 0.0174 (0.0176)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [175][300/391]	Time 0.1881 Data 0.0020 Loss 0.0223 (0.0178)	Acc@1 99.219 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0576, Prec@1: 73.56, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 176  lr: 0.001
+Epoch: [176][000/391]	Time 1.1854 Data 1.0150 Loss 0.0170 (0.0170)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [176][100/391]	Time 0.1856 Data 0.0023 Loss 0.0176 (0.0178)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [176][200/391]	Time 0.1864 Data 0.0020 Loss 0.0238 (0.0175)	Acc@1 99.219 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [176][300/391]	Time 0.1891 Data 0.0020 Loss 0.0131 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0626, Prec@1: 73.41, Prec@5: 91.38
+Epoch time: 80s
+Epoch: 177  lr: 0.001
+Epoch: [177][000/391]	Time 1.1796 Data 0.9568 Loss 0.0125 (0.0125)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [177][100/391]	Time 0.1877 Data 0.0019 Loss 0.0127 (0.0176)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [177][200/391]	Time 0.1865 Data 0.0020 Loss 0.0154 (0.0174)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [177][300/391]	Time 0.1866 Data 0.0022 Loss 0.0153 (0.0174)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0636, Prec@1: 73.48, Prec@5: 91.39
+Epoch time: 80s
+Epoch: 178  lr: 0.001
+Epoch: [178][000/391]	Time 1.1231 Data 0.9200 Loss 0.0203 (0.0203)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [178][100/391]	Time 0.1866 Data 0.0020 Loss 0.0157 (0.0177)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [178][200/391]	Time 0.1862 Data 0.0019 Loss 0.0227 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [178][300/391]	Time 0.1874 Data 0.0024 Loss 0.0173 (0.0176)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0636, Prec@1: 73.63, Prec@5: 91.54
+Epoch time: 80s
+Epoch: 179  lr: 0.001
+Epoch: [179][000/391]	Time 1.1215 Data 0.9049 Loss 0.0176 (0.0176)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [179][100/391]	Time 0.1860 Data 0.0020 Loss 0.0214 (0.0176)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [179][200/391]	Time 0.1868 Data 0.0020 Loss 0.0153 (0.0175)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [179][300/391]	Time 0.1927 Data 0.0020 Loss 0.0152 (0.0176)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0635, Prec@1: 73.59, Prec@5: 91.46
+Epoch time: 80s
+Epoch: 180  lr: 0.001
+Epoch: [180][000/391]	Time 1.1856 Data 1.0195 Loss 0.0158 (0.0158)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [180][100/391]	Time 0.1857 Data 0.0019 Loss 0.0152 (0.0179)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [180][200/391]	Time 0.1860 Data 0.0020 Loss 0.0190 (0.0176)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [180][300/391]	Time 0.1916 Data 0.0020 Loss 0.0132 (0.0177)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0630, Prec@1: 73.56, Prec@5: 91.43
+Epoch time: 80s
+Epoch: 181  lr: 0.001
+Epoch: [181][000/391]	Time 1.1564 Data 0.9640 Loss 0.0186 (0.0186)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [181][100/391]	Time 0.1864 Data 0.0021 Loss 0.0189 (0.0169)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [181][200/391]	Time 0.1862 Data 0.0020 Loss 0.0184 (0.0176)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [181][300/391]	Time 0.1871 Data 0.0021 Loss 0.0167 (0.0179)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0613, Prec@1: 73.51, Prec@5: 91.35
+Epoch time: 80s
+Epoch: 182  lr: 0.001
+Epoch: [182][000/391]	Time 1.1534 Data 0.9613 Loss 0.0215 (0.0215)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [182][100/391]	Time 0.1866 Data 0.0021 Loss 0.0212 (0.0172)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [182][200/391]	Time 0.1860 Data 0.0021 Loss 0.0145 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [182][300/391]	Time 0.1862 Data 0.0019 Loss 0.0169 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0619, Prec@1: 73.37, Prec@5: 91.34
+Epoch time: 80s
+Epoch: 183  lr: 0.001
+Epoch: [183][000/391]	Time 1.1374 Data 0.9088 Loss 0.0137 (0.0137)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [183][100/391]	Time 0.1869 Data 0.0020 Loss 0.0157 (0.0176)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [183][200/391]	Time 0.1871 Data 0.0025 Loss 0.0143 (0.0175)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [183][300/391]	Time 0.1888 Data 0.0019 Loss 0.0185 (0.0176)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0624, Prec@1: 73.54, Prec@5: 91.33
+Epoch time: 80s
+Epoch: 184  lr: 0.001
+Epoch: [184][000/391]	Time 1.2091 Data 1.0466 Loss 0.0210 (0.0210)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [184][100/391]	Time 0.1859 Data 0.0019 Loss 0.0203 (0.0175)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [184][200/391]	Time 0.1869 Data 0.0020 Loss 0.0245 (0.0176)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [184][300/391]	Time 0.1884 Data 0.0027 Loss 0.0143 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0625, Prec@1: 73.41, Prec@5: 91.53
+Epoch time: 80s
+Epoch: 185  lr: 0.001
+Epoch: [185][000/391]	Time 1.1549 Data 0.8697 Loss 0.0166 (0.0166)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [185][100/391]	Time 0.1893 Data 0.0021 Loss 0.0123 (0.0173)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [185][200/391]	Time 0.1869 Data 0.0019 Loss 0.0179 (0.0175)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [185][300/391]	Time 0.1864 Data 0.0020 Loss 0.0168 (0.0173)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0609, Prec@1: 73.43, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 186  lr: 0.001
+Epoch: [186][000/391]	Time 1.1830 Data 0.9951 Loss 0.0208 (0.0208)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [186][100/391]	Time 0.1863 Data 0.0019 Loss 0.0193 (0.0179)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [186][200/391]	Time 0.1866 Data 0.0020 Loss 0.0168 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [186][300/391]	Time 0.1874 Data 0.0020 Loss 0.0184 (0.0173)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0616, Prec@1: 73.49, Prec@5: 91.62
+Epoch time: 80s
+Epoch: 187  lr: 0.001
+Epoch: [187][000/391]	Time 1.0918 Data 0.8807 Loss 0.0168 (0.0168)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [187][100/391]	Time 0.1869 Data 0.0019 Loss 0.0159 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [187][200/391]	Time 0.1878 Data 0.0019 Loss 0.0144 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [187][300/391]	Time 0.1862 Data 0.0020 Loss 0.0188 (0.0174)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0626, Prec@1: 73.49, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 188  lr: 0.001
+Epoch: [188][000/391]	Time 1.1911 Data 0.9628 Loss 0.0185 (0.0185)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [188][100/391]	Time 0.1873 Data 0.0021 Loss 0.0148 (0.0173)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [188][200/391]	Time 0.1861 Data 0.0021 Loss 0.0156 (0.0177)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [188][300/391]	Time 0.1857 Data 0.0019 Loss 0.0168 (0.0176)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0624, Prec@1: 73.49, Prec@5: 91.50
+Epoch time: 80s
+Epoch: 189  lr: 0.001
+Epoch: [189][000/391]	Time 1.2398 Data 1.0216 Loss 0.0145 (0.0145)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [189][100/391]	Time 0.1889 Data 0.0023 Loss 0.0217 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [189][200/391]	Time 0.1858 Data 0.0019 Loss 0.0208 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [189][300/391]	Time 0.1858 Data 0.0024 Loss 0.0143 (0.0175)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0603, Prec@1: 73.54, Prec@5: 91.36
+Epoch time: 80s
+Epoch: 190  lr: 0.001
+Epoch: [190][000/391]	Time 1.1791 Data 0.9486 Loss 0.0253 (0.0253)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [190][100/391]	Time 0.1897 Data 0.0019 Loss 0.0227 (0.0178)	Acc@1 99.219 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [190][200/391]	Time 0.1866 Data 0.0020 Loss 0.0153 (0.0174)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [190][300/391]	Time 0.1863 Data 0.0019 Loss 0.0208 (0.0176)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0635, Prec@1: 73.32, Prec@5: 91.46
+Epoch time: 80s
+Epoch: 191  lr: 0.001
+Epoch: [191][000/391]	Time 1.1770 Data 0.9790 Loss 0.0171 (0.0171)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [191][100/391]	Time 0.1871 Data 0.0028 Loss 0.0161 (0.0172)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [191][200/391]	Time 0.1865 Data 0.0019 Loss 0.0155 (0.0171)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [191][300/391]	Time 0.1871 Data 0.0019 Loss 0.0166 (0.0174)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0598, Prec@1: 73.34, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 192  lr: 0.001
+Epoch: [192][000/391]	Time 1.3092 Data 1.0823 Loss 0.0186 (0.0186)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [192][100/391]	Time 0.1882 Data 0.0025 Loss 0.0171 (0.0170)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [192][200/391]	Time 0.1868 Data 0.0020 Loss 0.0178 (0.0171)	Acc@1 100.000 (99.988)	Acc@5 100.000 (100.000)
+Epoch: [192][300/391]	Time 0.1865 Data 0.0020 Loss 0.0243 (0.0173)	Acc@1 100.000 (99.982)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0623, Prec@1: 73.39, Prec@5: 91.39
+Epoch time: 80s
+Epoch: 193  lr: 0.001
+Epoch: [193][000/391]	Time 1.1976 Data 0.9769 Loss 0.0129 (0.0129)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [193][100/391]	Time 0.1873 Data 0.0020 Loss 0.0181 (0.0174)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [193][200/391]	Time 0.1871 Data 0.0020 Loss 0.0170 (0.0176)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [193][300/391]	Time 0.1858 Data 0.0019 Loss 0.0207 (0.0173)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0616, Prec@1: 73.55, Prec@5: 91.56
+Epoch time: 80s
+Epoch: 194  lr: 0.001
+Epoch: [194][000/391]	Time 1.2099 Data 0.9552 Loss 0.0141 (0.0141)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [194][100/391]	Time 0.1885 Data 0.0024 Loss 0.0141 (0.0171)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [194][200/391]	Time 0.1864 Data 0.0019 Loss 0.0202 (0.0172)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [194][300/391]	Time 0.1862 Data 0.0019 Loss 0.0179 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0645, Prec@1: 73.62, Prec@5: 91.44
+Epoch time: 80s
+Epoch: 195  lr: 0.001
+Epoch: [195][000/391]	Time 1.1532 Data 0.9200 Loss 0.0159 (0.0159)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [195][100/391]	Time 0.1865 Data 0.0023 Loss 0.0259 (0.0178)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [195][200/391]	Time 0.1881 Data 0.0022 Loss 0.0132 (0.0175)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [195][300/391]	Time 0.1869 Data 0.0019 Loss 0.0163 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0612, Prec@1: 73.46, Prec@5: 91.41
+Epoch time: 80s
+Epoch: 196  lr: 0.001
+Epoch: [196][000/391]	Time 1.1633 Data 0.9673 Loss 0.0166 (0.0166)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [196][100/391]	Time 0.1859 Data 0.0019 Loss 0.0175 (0.0173)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [196][200/391]	Time 0.1871 Data 0.0020 Loss 0.0173 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [196][300/391]	Time 0.1865 Data 0.0020 Loss 0.0149 (0.0172)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.39, Prec@5: 91.44
+Epoch time: 80s
+Epoch: 197  lr: 0.001
+Epoch: [197][000/391]	Time 1.1899 Data 0.9610 Loss 0.0242 (0.0242)	Acc@1 99.219 (99.219)	Acc@5 100.000 (100.000)
+Epoch: [197][100/391]	Time 0.1864 Data 0.0020 Loss 0.0297 (0.0171)	Acc@1 99.219 (99.938)	Acc@5 100.000 (100.000)
+Epoch: [197][200/391]	Time 0.1874 Data 0.0022 Loss 0.0165 (0.0174)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Epoch: [197][300/391]	Time 0.1865 Data 0.0020 Loss 0.0152 (0.0173)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0625, Prec@1: 73.50, Prec@5: 91.44
+Epoch time: 80s
+Epoch: 198  lr: 0.001
+Epoch: [198][000/391]	Time 1.1534 Data 0.9279 Loss 0.0195 (0.0195)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [198][100/391]	Time 0.1861 Data 0.0019 Loss 0.0178 (0.0176)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [198][200/391]	Time 0.1855 Data 0.0019 Loss 0.0289 (0.0177)	Acc@1 99.219 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [198][300/391]	Time 0.1919 Data 0.0029 Loss 0.0138 (0.0176)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0595, Prec@1: 73.61, Prec@5: 91.38
+Epoch time: 80s
+Epoch: 199  lr: 0.001
+Epoch: [199][000/391]	Time 1.1645 Data 0.9997 Loss 0.0170 (0.0170)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [199][100/391]	Time 0.1883 Data 0.0022 Loss 0.0115 (0.0176)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [199][200/391]	Time 0.1887 Data 0.0020 Loss 0.0168 (0.0175)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [199][300/391]	Time 0.1914 Data 0.0020 Loss 0.0164 (0.0177)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.50, Prec@5: 91.34
+Epoch time: 80s
+Epoch: 200  lr: 0.001
+Epoch: [200][000/391]	Time 1.1625 Data 0.9589 Loss 0.0155 (0.0155)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [200][100/391]	Time 0.1861 Data 0.0020 Loss 0.0155 (0.0175)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [200][200/391]	Time 0.1858 Data 0.0019 Loss 0.0143 (0.0172)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [200][300/391]	Time 0.1896 Data 0.0029 Loss 0.0140 (0.0175)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0582, Prec@1: 73.53, Prec@5: 91.50
+Epoch time: 80s
+Epoch: 201  lr: 0.001
+Epoch: [201][000/391]	Time 1.1743 Data 0.9380 Loss 0.0193 (0.0193)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [201][100/391]	Time 0.1862 Data 0.0020 Loss 0.0175 (0.0175)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [201][200/391]	Time 0.1862 Data 0.0020 Loss 0.0176 (0.0176)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [201][300/391]	Time 0.1864 Data 0.0025 Loss 0.0152 (0.0179)	Acc@1 100.000 (99.951)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0597, Prec@1: 73.29, Prec@5: 91.54
+Epoch time: 80s
+Epoch: 202  lr: 0.001
+Epoch: [202][000/391]	Time 1.2193 Data 1.0215 Loss 0.0154 (0.0154)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [202][100/391]	Time 0.1883 Data 0.0019 Loss 0.0186 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [202][200/391]	Time 0.1870 Data 0.0025 Loss 0.0185 (0.0176)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [202][300/391]	Time 0.1857 Data 0.0019 Loss 0.0171 (0.0176)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.51, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 203  lr: 0.001
+Epoch: [203][000/391]	Time 1.2305 Data 1.0628 Loss 0.0131 (0.0131)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [203][100/391]	Time 0.1871 Data 0.0023 Loss 0.0149 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [203][200/391]	Time 0.1866 Data 0.0019 Loss 0.0127 (0.0173)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [203][300/391]	Time 0.1868 Data 0.0020 Loss 0.0144 (0.0174)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0614, Prec@1: 73.52, Prec@5: 91.44
+Epoch time: 80s
+Epoch: 204  lr: 0.001
+Epoch: [204][000/391]	Time 1.2327 Data 0.9724 Loss 0.0148 (0.0148)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [204][100/391]	Time 0.1866 Data 0.0020 Loss 0.0156 (0.0174)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [204][200/391]	Time 0.1901 Data 0.0020 Loss 0.0208 (0.0174)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [204][300/391]	Time 0.1864 Data 0.0019 Loss 0.0153 (0.0177)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0594, Prec@1: 73.56, Prec@5: 91.61
+Epoch time: 80s
+Epoch: 205  lr: 0.001
+Epoch: [205][000/391]	Time 1.1213 Data 0.9608 Loss 0.0152 (0.0152)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [205][100/391]	Time 0.1867 Data 0.0020 Loss 0.0186 (0.0175)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [205][200/391]	Time 0.1891 Data 0.0021 Loss 0.0156 (0.0175)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [205][300/391]	Time 0.1883 Data 0.0020 Loss 0.0162 (0.0175)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0564, Prec@1: 73.68, Prec@5: 91.51
+Epoch time: 80s
+Saving models
+Epoch: 206  lr: 0.001
+Epoch: [206][000/391]	Time 1.1639 Data 0.9499 Loss 0.0141 (0.0141)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [206][100/391]	Time 0.1865 Data 0.0020 Loss 0.0198 (0.0173)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [206][200/391]	Time 0.1861 Data 0.0024 Loss 0.0155 (0.0173)	Acc@1 100.000 (99.981)	Acc@5 100.000 (100.000)
+Epoch: [206][300/391]	Time 0.1889 Data 0.0022 Loss 0.0150 (0.0174)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0622, Prec@1: 73.55, Prec@5: 91.49
+Epoch time: 80s
+Epoch: 207  lr: 0.001
+Epoch: [207][000/391]	Time 1.1661 Data 0.8960 Loss 0.0186 (0.0186)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [207][100/391]	Time 0.1863 Data 0.0020 Loss 0.0149 (0.0176)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [207][200/391]	Time 0.1867 Data 0.0021 Loss 0.0221 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [207][300/391]	Time 0.1859 Data 0.0019 Loss 0.0140 (0.0176)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0594, Prec@1: 73.59, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 208  lr: 0.001
+Epoch: [208][000/391]	Time 1.1832 Data 0.9585 Loss 0.0187 (0.0187)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [208][100/391]	Time 0.1881 Data 0.0020 Loss 0.0150 (0.0173)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [208][200/391]	Time 0.1886 Data 0.0019 Loss 0.0141 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [208][300/391]	Time 0.1924 Data 0.0020 Loss 0.0195 (0.0173)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0591, Prec@1: 73.53, Prec@5: 91.62
+Epoch time: 80s
+Epoch: 209  lr: 0.001
+Epoch: [209][000/391]	Time 1.1872 Data 0.9641 Loss 0.0197 (0.0197)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [209][100/391]	Time 0.1858 Data 0.0020 Loss 0.0180 (0.0174)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [209][200/391]	Time 0.1860 Data 0.0020 Loss 0.0221 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [209][300/391]	Time 0.1867 Data 0.0021 Loss 0.0217 (0.0173)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0612, Prec@1: 73.51, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 210  lr: 0.001
+Epoch: [210][000/391]	Time 1.1498 Data 0.9300 Loss 0.0172 (0.0172)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [210][100/391]	Time 0.1860 Data 0.0019 Loss 0.0179 (0.0172)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [210][200/391]	Time 0.1881 Data 0.0020 Loss 0.0147 (0.0173)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [210][300/391]	Time 0.1881 Data 0.0020 Loss 0.0161 (0.0171)	Acc@1 100.000 (99.982)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0594, Prec@1: 73.46, Prec@5: 91.52
+Epoch time: 80s
+Epoch: 211  lr: 0.001
+Epoch: [211][000/391]	Time 1.1562 Data 0.8844 Loss 0.0207 (0.0207)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [211][100/391]	Time 0.1862 Data 0.0020 Loss 0.0226 (0.0171)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [211][200/391]	Time 0.1858 Data 0.0019 Loss 0.0134 (0.0174)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [211][300/391]	Time 0.1868 Data 0.0019 Loss 0.0154 (0.0173)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0618, Prec@1: 73.46, Prec@5: 91.47
+Epoch time: 80s
+Epoch: 212  lr: 0.001
+Epoch: [212][000/391]	Time 1.2169 Data 0.9983 Loss 0.0140 (0.0140)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [212][100/391]	Time 0.1866 Data 0.0020 Loss 0.0133 (0.0170)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [212][200/391]	Time 0.1868 Data 0.0024 Loss 0.0155 (0.0171)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [212][300/391]	Time 0.1868 Data 0.0020 Loss 0.0199 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0618, Prec@1: 73.44, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 213  lr: 0.001
+Epoch: [213][000/391]	Time 1.1192 Data 0.9155 Loss 0.0151 (0.0151)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [213][100/391]	Time 0.1862 Data 0.0019 Loss 0.0155 (0.0167)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [213][200/391]	Time 0.1865 Data 0.0026 Loss 0.0167 (0.0175)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [213][300/391]	Time 0.1867 Data 0.0021 Loss 0.0150 (0.0174)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0639, Prec@1: 73.45, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 214  lr: 0.001
+Epoch: [214][000/391]	Time 1.1534 Data 1.0052 Loss 0.0153 (0.0153)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [214][100/391]	Time 0.1869 Data 0.0021 Loss 0.0162 (0.0170)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [214][200/391]	Time 0.1885 Data 0.0020 Loss 0.0145 (0.0171)	Acc@1 100.000 (99.984)	Acc@5 100.000 (100.000)
+Epoch: [214][300/391]	Time 0.1863 Data 0.0023 Loss 0.0175 (0.0171)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0609, Prec@1: 73.36, Prec@5: 91.45
+Epoch time: 80s
+Epoch: 215  lr: 0.001
+Epoch: [215][000/391]	Time 1.1749 Data 1.0246 Loss 0.0135 (0.0135)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [215][100/391]	Time 0.1871 Data 0.0020 Loss 0.0168 (0.0178)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [215][200/391]	Time 0.1863 Data 0.0020 Loss 0.0296 (0.0175)	Acc@1 100.000 (99.984)	Acc@5 100.000 (100.000)
+Epoch: [215][300/391]	Time 0.1864 Data 0.0020 Loss 0.0180 (0.0173)	Acc@1 100.000 (99.979)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0690, Prec@1: 73.35, Prec@5: 91.45
+Epoch time: 80s
+Epoch: 216  lr: 0.001
+Epoch: [216][000/391]	Time 1.1561 Data 0.8896 Loss 0.0148 (0.0148)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [216][100/391]	Time 0.1864 Data 0.0020 Loss 0.0136 (0.0171)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [216][200/391]	Time 0.1863 Data 0.0020 Loss 0.0175 (0.0174)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [216][300/391]	Time 0.1860 Data 0.0020 Loss 0.0170 (0.0172)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0603, Prec@1: 73.47, Prec@5: 91.27
+Epoch time: 80s
+Epoch: 217  lr: 0.001
+Epoch: [217][000/391]	Time 1.2133 Data 0.9383 Loss 0.0228 (0.0228)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [217][100/391]	Time 0.1860 Data 0.0019 Loss 0.0184 (0.0163)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [217][200/391]	Time 0.1861 Data 0.0020 Loss 0.0138 (0.0167)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [217][300/391]	Time 0.1861 Data 0.0019 Loss 0.0149 (0.0168)	Acc@1 100.000 (99.990)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0600, Prec@1: 73.53, Prec@5: 91.53
+Epoch time: 80s
+Epoch: 218  lr: 0.001
+Epoch: [218][000/391]	Time 1.1722 Data 0.9873 Loss 0.0154 (0.0154)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [218][100/391]	Time 0.1873 Data 0.0019 Loss 0.0161 (0.0177)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [218][200/391]	Time 0.1868 Data 0.0019 Loss 0.0145 (0.0174)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [218][300/391]	Time 0.1865 Data 0.0019 Loss 0.0339 (0.0173)	Acc@1 99.219 (99.961)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0667, Prec@1: 73.50, Prec@5: 91.35
+Epoch time: 80s
+Epoch: 219  lr: 0.001
+Epoch: [219][000/391]	Time 1.1847 Data 1.0351 Loss 0.0147 (0.0147)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [219][100/391]	Time 0.1872 Data 0.0025 Loss 0.0151 (0.0179)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [219][200/391]	Time 0.1860 Data 0.0020 Loss 0.0153 (0.0177)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [219][300/391]	Time 0.1861 Data 0.0019 Loss 0.0140 (0.0175)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0594, Prec@1: 73.37, Prec@5: 91.57
+Epoch time: 80s
+Epoch: 220  lr: 0.001
+Epoch: [220][000/391]	Time 1.1602 Data 0.9787 Loss 0.0164 (0.0164)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [220][100/391]	Time 0.1861 Data 0.0020 Loss 0.0201 (0.0176)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [220][200/391]	Time 0.1905 Data 0.0019 Loss 0.0132 (0.0175)	Acc@1 100.000 (99.953)	Acc@5 100.000 (100.000)
+Epoch: [220][300/391]	Time 0.1861 Data 0.0024 Loss 0.0144 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0604, Prec@1: 73.52, Prec@5: 91.62
+Epoch time: 80s
+Epoch: 221  lr: 0.001
+Epoch: [221][000/391]	Time 1.1808 Data 0.9527 Loss 0.0168 (0.0168)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [221][100/391]	Time 0.1881 Data 0.0022 Loss 0.0174 (0.0170)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [221][200/391]	Time 0.1884 Data 0.0021 Loss 0.0198 (0.0171)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [221][300/391]	Time 0.1868 Data 0.0020 Loss 0.0193 (0.0173)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0610, Prec@1: 73.52, Prec@5: 91.42
+Epoch time: 80s
+Epoch: 222  lr: 0.001
+Epoch: [222][000/391]	Time 1.1424 Data 0.9511 Loss 0.0141 (0.0141)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [222][100/391]	Time 0.1858 Data 0.0020 Loss 0.0152 (0.0178)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [222][200/391]	Time 0.1865 Data 0.0020 Loss 0.0164 (0.0175)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [222][300/391]	Time 0.1875 Data 0.0019 Loss 0.0112 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0615, Prec@1: 73.62, Prec@5: 91.51
+Epoch time: 80s
+Epoch: 223  lr: 0.001
+Epoch: [223][000/391]	Time 1.1099 Data 0.8858 Loss 0.0133 (0.0133)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [223][100/391]	Time 0.1870 Data 0.0021 Loss 0.0173 (0.0174)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [223][200/391]	Time 0.1872 Data 0.0020 Loss 0.0149 (0.0174)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [223][300/391]	Time 0.1879 Data 0.0020 Loss 0.0193 (0.0174)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0598, Prec@1: 73.62, Prec@5: 91.55
+Epoch time: 80s
+Epoch: 224  lr: 0.001
+Epoch: [224][000/391]	Time 1.1650 Data 0.9472 Loss 0.0160 (0.0160)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [224][100/391]	Time 0.1859 Data 0.0020 Loss 0.0158 (0.0170)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [224][200/391]	Time 0.1861 Data 0.0020 Loss 0.0170 (0.0173)	Acc@1 100.000 (99.973)	Acc@5 100.000 (100.000)
+Epoch: [224][300/391]	Time 0.1871 Data 0.0029 Loss 0.0313 (0.0172)	Acc@1 99.219 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0625, Prec@1: 73.61, Prec@5: 91.34
+Epoch time: 80s
+Epoch: 225  lr: 0.001
+Epoch: [225][000/391]	Time 1.2536 Data 1.0390 Loss 0.0184 (0.0184)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [225][100/391]	Time 0.1866 Data 0.0020 Loss 0.0161 (0.0173)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [225][200/391]	Time 0.1861 Data 0.0019 Loss 0.0153 (0.0170)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [225][300/391]	Time 0.1863 Data 0.0020 Loss 0.0122 (0.0171)	Acc@1 100.000 (99.974)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0652, Prec@1: 73.60, Prec@5: 91.40
+Epoch time: 80s
+Epoch: 226  lr: 0.001
+Epoch: [226][000/391]	Time 1.1401 Data 0.9569 Loss 0.0151 (0.0151)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [226][100/391]	Time 0.1857 Data 0.0020 Loss 0.0189 (0.0168)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [226][200/391]	Time 0.1872 Data 0.0021 Loss 0.0183 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [226][300/391]	Time 0.1866 Data 0.0022 Loss 0.0216 (0.0172)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0599, Prec@1: 73.61, Prec@5: 91.55
+Epoch time: 80s
+Epoch: 227  lr: 0.001
+Epoch: [227][000/391]	Time 1.1966 Data 0.9294 Loss 0.0187 (0.0187)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [227][100/391]	Time 0.1862 Data 0.0021 Loss 0.0187 (0.0165)	Acc@1 100.000 (99.992)	Acc@5 100.000 (100.000)
+Epoch: [227][200/391]	Time 0.1877 Data 0.0021 Loss 0.0173 (0.0168)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [227][300/391]	Time 0.1865 Data 0.0019 Loss 0.0194 (0.0170)	Acc@1 100.000 (99.982)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0628, Prec@1: 73.54, Prec@5: 91.48
+Epoch time: 80s
+Epoch: 228  lr: 0.001
+Epoch: [228][000/391]	Time 1.1123 Data 0.8986 Loss 0.0151 (0.0151)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [228][100/391]	Time 0.1864 Data 0.0020 Loss 0.0151 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [228][200/391]	Time 0.1915 Data 0.0020 Loss 0.0135 (0.0175)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [228][300/391]	Time 0.1865 Data 0.0020 Loss 0.0214 (0.0176)	Acc@1 100.000 (99.958)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0620, Prec@1: 73.42, Prec@5: 91.43
+Epoch time: 80s
+Epoch: 229  lr: 0.001
+Epoch: [229][000/391]	Time 1.2194 Data 0.9953 Loss 0.0209 (0.0209)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [229][100/391]	Time 0.1876 Data 0.0020 Loss 0.0135 (0.0165)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [229][200/391]	Time 0.1867 Data 0.0020 Loss 0.0130 (0.0170)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [229][300/391]	Time 0.1877 Data 0.0030 Loss 0.0148 (0.0172)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0606, Prec@1: 73.63, Prec@5: 91.62
+Epoch time: 80s
+Epoch: 230  lr: 0.001
+Epoch: [230][000/391]	Time 1.1122 Data 0.8990 Loss 0.0187 (0.0187)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [230][100/391]	Time 0.1861 Data 0.0021 Loss 0.0129 (0.0175)	Acc@1 100.000 (99.946)	Acc@5 100.000 (100.000)
+Epoch: [230][200/391]	Time 0.1863 Data 0.0019 Loss 0.0171 (0.0172)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [230][300/391]	Time 0.1864 Data 0.0022 Loss 0.0115 (0.0172)	Acc@1 100.000 (99.966)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0602, Prec@1: 73.60, Prec@5: 91.37
+Epoch time: 80s
+Epoch: 231  lr: 0.001
+Epoch: [231][000/391]	Time 1.2011 Data 1.0035 Loss 0.0194 (0.0194)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [231][100/391]	Time 0.1865 Data 0.0019 Loss 0.0199 (0.0171)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [231][200/391]	Time 0.1881 Data 0.0020 Loss 0.0106 (0.0170)	Acc@1 100.000 (99.984)	Acc@5 100.000 (100.000)
+Epoch: [231][300/391]	Time 0.1872 Data 0.0020 Loss 0.0149 (0.0171)	Acc@1 100.000 (99.987)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0624, Prec@1: 73.43, Prec@5: 91.55
+Epoch time: 80s
+Epoch: 232  lr: 0.001
+Epoch: [232][000/391]	Time 1.2068 Data 0.9834 Loss 0.0121 (0.0121)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [232][100/391]	Time 0.1905 Data 0.0025 Loss 0.0173 (0.0171)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [232][200/391]	Time 0.1861 Data 0.0020 Loss 0.0158 (0.0173)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [232][300/391]	Time 0.1864 Data 0.0020 Loss 0.0187 (0.0173)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0595, Prec@1: 73.53, Prec@5: 91.38
+Epoch time: 80s
+Epoch: 233  lr: 0.001
+Epoch: [233][000/391]	Time 1.2036 Data 0.9378 Loss 0.0150 (0.0150)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [233][100/391]	Time 0.1867 Data 0.0028 Loss 0.0160 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [233][200/391]	Time 0.1873 Data 0.0020 Loss 0.0176 (0.0170)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [233][300/391]	Time 0.1865 Data 0.0019 Loss 0.0162 (0.0169)	Acc@1 100.000 (99.979)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0627, Prec@1: 73.58, Prec@5: 91.31
+Epoch time: 80s
+Epoch: 234  lr: 0.001
+Epoch: [234][000/391]	Time 1.1991 Data 0.9881 Loss 0.0171 (0.0171)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [234][100/391]	Time 0.1883 Data 0.0020 Loss 0.0144 (0.0173)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [234][200/391]	Time 0.1878 Data 0.0021 Loss 0.0168 (0.0169)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [234][300/391]	Time 0.1868 Data 0.0020 Loss 0.0133 (0.0172)	Acc@1 100.000 (99.956)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0593, Prec@1: 73.64, Prec@5: 91.43
+Epoch time: 80s
+Epoch: 235  lr: 0.001
+Epoch: [235][000/391]	Time 1.1588 Data 0.9499 Loss 0.0190 (0.0190)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [235][100/391]	Time 0.1866 Data 0.0019 Loss 0.0173 (0.0169)	Acc@1 100.000 (99.961)	Acc@5 100.000 (100.000)
+Epoch: [235][200/391]	Time 0.1860 Data 0.0020 Loss 0.0124 (0.0172)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [235][300/391]	Time 0.1865 Data 0.0019 Loss 0.0202 (0.0173)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0622, Prec@1: 73.49, Prec@5: 91.33
+Epoch time: 80s
+Epoch: 236  lr: 0.001
+Epoch: [236][000/391]	Time 1.1596 Data 0.9670 Loss 0.0224 (0.0224)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [236][100/391]	Time 0.1860 Data 0.0020 Loss 0.0214 (0.0167)	Acc@1 100.000 (99.985)	Acc@5 100.000 (100.000)
+Epoch: [236][200/391]	Time 0.1889 Data 0.0020 Loss 0.0243 (0.0171)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [236][300/391]	Time 0.1885 Data 0.0021 Loss 0.0164 (0.0171)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0596, Prec@1: 73.55, Prec@5: 91.48
+Epoch time: 80s
+Epoch: 237  lr: 0.001
+Epoch: [237][000/391]	Time 1.1807 Data 0.9768 Loss 0.0157 (0.0157)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [237][100/391]	Time 0.1857 Data 0.0019 Loss 0.0198 (0.0170)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Epoch: [237][200/391]	Time 0.1877 Data 0.0025 Loss 0.0158 (0.0175)	Acc@1 100.000 (99.957)	Acc@5 100.000 (100.000)
+Epoch: [237][300/391]	Time 0.1862 Data 0.0020 Loss 0.0148 (0.0176)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0592, Prec@1: 73.58, Prec@5: 91.57
+Epoch time: 80s
+Epoch: 238  lr: 0.001
+Epoch: [238][000/391]	Time 1.1977 Data 1.0459 Loss 0.0137 (0.0137)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [238][100/391]	Time 0.1862 Data 0.0019 Loss 0.0212 (0.0171)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [238][200/391]	Time 0.1874 Data 0.0024 Loss 0.0135 (0.0169)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [238][300/391]	Time 0.1872 Data 0.0019 Loss 0.0183 (0.0170)	Acc@1 100.000 (99.969)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0583, Prec@1: 73.65, Prec@5: 91.40
+Epoch time: 80s
+Epoch: 239  lr: 0.001
+Epoch: [239][000/391]	Time 1.1339 Data 0.9125 Loss 0.0159 (0.0159)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [239][100/391]	Time 0.1864 Data 0.0019 Loss 0.0211 (0.0171)	Acc@1 100.000 (99.954)	Acc@5 100.000 (100.000)
+Epoch: [239][200/391]	Time 0.1860 Data 0.0019 Loss 0.0185 (0.0172)	Acc@1 100.000 (99.965)	Acc@5 100.000 (100.000)
+Epoch: [239][300/391]	Time 0.1863 Data 0.0019 Loss 0.0210 (0.0172)	Acc@1 100.000 (99.971)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0596, Prec@1: 73.55, Prec@5: 91.50
+Epoch time: 80s
+Epoch: 240  lr: 0.001
+Epoch: [240][000/391]	Time 1.1855 Data 1.0295 Loss 0.0151 (0.0151)	Acc@1 100.000 (100.000)	Acc@5 100.000 (100.000)
+Epoch: [240][100/391]	Time 0.1867 Data 0.0022 Loss 0.0156 (0.0172)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [240][200/391]	Time 0.1860 Data 0.0020 Loss 0.0186 (0.0171)	Acc@1 100.000 (99.977)	Acc@5 100.000 (100.000)
+Epoch: [240][300/391]	Time 0.1873 Data 0.0020 Loss 0.0137 (0.0171)	Acc@1 100.000 (99.964)	Acc@5 100.000 (100.000)
+Testing the models......
+Loss: 1.0590, Prec@1: 73.62, Prec@5: 91.50
+Epoch time: 80s
